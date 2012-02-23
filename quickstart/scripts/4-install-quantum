@@ -1,0 +1,77 @@
+#!/bin/bash -ex
+# Copyright 2012 NEC Corporation.
+# All Rights Reserved.
+#
+
+[ -z ${INSTALLER_DIR} ] && echo "Error: no INSTALLER_DIR!" && exit 1
+[ -z ${NEC_PLUGIN_DIR} ] && echo "Error: no NEC_PLUGIN_DIR!" && exit 1
+[ -z ${MYSQL_PASS} ] && echo "Error: no MYSQL_PASS!" && exit 1
+[ -z ${QDB_NAME} ] && echo "Error: no QDB_NAME!" && exit 1
+[ -z ${QDB_USER} ] && echo "Error: no QDB_USER!" && exit 1
+[ -z ${QDB_PASS} ] && echo "Error: no QDB_PASS!" && exit 1
+
+QUANTUM_TAR="quantum-2011.3.tar.gz"
+QUANTUM_URL="http://launchpad.net/quantum/diablo/2011.3/+download/quantum-2011.3.tar.gz"
+
+
+# install required packages
+req_pkgs="python-eventlet python-nose python-paste python-pastedeploy \
+          pep8 python-gflags python-routes python-simplejson \
+          python-webob python-webtest"
+sudo apt-get install -y $req_pkgs
+
+# deploy quantum
+pushd $INSTALLER_DIR
+	if ! [ -f "$QUANTUM_TAR" ]
+	then
+		wget "$QUANTUM_URL"
+	fi
+	if ! [ -f "$QUANTUM_TAR" ]
+	then
+		echo "Error: no Quantum!"
+		exit 1
+	fi
+	tar xf "$QUANTUM_TAR"
+	cp -r ${QUANTUM_TAR%.tar.gz}/* ${NEC_PLUGIN_DIR}/quantum/
+	rm -rf ${QUANTUM_TAR%.tar.gz}
+popd
+
+# config quantum server
+conf=$NEC_PLUGIN_DIR/quantum/quantum/plugins.ini
+cp $conf $conf.org
+necplugin="quantum.plugins.nec.nec_plugin.NECPlugin"
+sed -i -e "s/^provider =.*$/provider = $necplugin/g" $conf
+
+# disable extensions not supported by the NECPlugin 
+QEXT_DIR="$NEC_PLUGIN_DIR/quantum/extensions"
+ls -1 "$QEXT_DIR" | grep -e "^[^_].*.py$" | grep -v "^vifinfo.py$" \
+	| while read file
+do
+	mv "$QEXT_DIR/$file" "$QEXT_DIR/_$file"
+done
+
+# create quantum database
+mysql -uroot -p$MYSQL_PASS << END
+CREATE DATABASE $QDB_NAME;
+GRANT ALL PRIVILEGES ON $QDB_NAME.* TO '$QDB_USER'@'%';
+SET PASSWORD FOR '$QDB_USER'@'%' = PASSWORD('$QDB_PASS');
+SELECT user,host,password FROM mysql.user;
+FLUSH PRIVILEGES;
+END
+
+# modify start script
+cat > "$NEC_PLUGIN_DIR/quantum/start-quantum.sh" << 'END'
+#!/bin/bash
+LOG="quantum-server.log"
+DIR="${0%/*}"
+cd $DIR
+PYTHONPATH=".:$PYTHONPATH" nohup python bin/quantum etc/quantum.conf > $LOG 2>&1 &
+cd -
+END
+chmod +x "$NEC_PLUGIN_DIR/quantum/start-quantum.sh"
+
+# start quantum
+sleep 1
+$NEC_PLUGIN_DIR/quantum/start-quantum.sh
+sleep 5
+ps aux | grep quantum | grep -v "grep" || exit 1

@@ -1,0 +1,23 @@
+#!/bin/bash -ex
+# Copyright 2012 NEC Corporation.
+# All Rights Reserved.
+#
+
+[ -z ${BRIDGE} ] && echo "Error: no BRIDGE!" && exit 1
+[ -z ${HOST_IP} ] && echo "Error: no HOST_IP!" && exit 1
+
+
+# install packages
+pkgs="openvswitch-switch openvswitch-datapath-dkms"
+sudo apt-get install -y $pkgs
+
+# set default dridge
+sudo ovs-vsctl add-br $BRIDGE
+sudo ovs-vsctl set-controller $BRIDGE tcp:$HOST_IP
+
+# allow ovs command
+if ! sudo grep -q "/usr/sbin/ovs-vsctl" /etc/sudoers.d/nova_sudoers ;
+then
+	sudo sed -i -e "s|/usr/bin/dhcp_release|&, /usr/sbin/ovs-vsctl|" \
+		/etc/sudoers.d/nova_sudoers
+fi

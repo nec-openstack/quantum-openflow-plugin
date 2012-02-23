@@ -1,0 +1,39 @@
+# in node configs #
+--verbose
+--logdir=/var/log/nova
+--state_path=/var/lib/nova
+--lock_path=/var/lock/nova
+
+# core services #
+--my_ip=@HOST_IP@
+--rabbit_host=@HOST_IP@
+--sql_connection=mysql://nova:@NDB_PASS@@@HOST_IP@/nova
+
+# api #
+--ec2_host=@HOST_IP@
+--ec2_api=@HOST_IP@
+--ec2_url=http://@HOST_IP@:8773/services/Cloud
+
+# compute #
+--libvirt_type=kvm
+--libvirt_vif_driver=nova.virt.libvirt.nec.nec_vif_driver.NECVIFDriver
+--libvirt_vif_type=ethernet
+--libvirt_ovs_integration_bridge=@BRIDGE@
+
+# network - internal #
+--network_host=@HOST_IP@
+--dhcpbridge=/usr/bin/nova-dhcpbridge
+--dhcpbridge_flagfile=/etc/nova/nova.conf
+--network_manager=nova.network.quantum.manager.QuantumManager
+--linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
+
+# network - external #
+--public_interface=eth0
+--routing_source_ip=@HOST_IP@
+--quantum_host=@HOST_IP@
+
+# storage #
+--glance_api_servers=@HOST_IP@:9292
+
+# auth #
+--use_deprecated_auth=True
