@@ -1,4 +1,3 @@
-
 Quick Start Installer
 =====================
 
@@ -61,6 +60,8 @@ Run Installer
 
 Run `installer.sh', and wait...
 
+        $ ./installer.sh
+
 After installation has finished, check console output and log files.
 The log files can be found at:
 * Nova    /var/log/nova/
@@ -81,21 +82,25 @@ Test VM Launch
 --------------
 
 1. Load novarc.
-      $ source quickstart/creds/novarc
+
+        $ source quickstart/creds/novarc
 
 2. Check IP address range in the script, and run it.
-   Set parameter: (<Label> <IP Address/cidr> <Size of the network> <Gateway>).
-      $ ./create-private-network.sh
+   Set parameter: `(<Label> <IP Address/cidr> <Size of the network> <Gateway>)`.
+
+        $ ./create-private-network.sh
 
 3. Launch VM.
    e.g.:
-      $ euca-run-instances -k usagi -t m1.tiny ami-00000003
+
+        $ euca-run-instances -k usagi -t m1.tiny ami-00000003
         or
-      $ nova boot --image 3 --flavor 1 --meta key=usagi servera
+        $ nova boot --image 3 --flavor 1 --meta key=usagi servera
 
 4. Check Status
-      $ euca-describe-instances
-       or
-      $ nova list
+
+        $ euca-describe-instances
+        or
+        $ nova list
 
 5. Ping, SSH, etc...  Enjoy!
