@@ -11,8 +11,9 @@ L2 networks virtualized on an OpenFlow enabled network.
 An OpenFlow Controller (OFC) provides L2 network isolation without VLAN,
 and this plugin controls the OFC through a REST API.
 Two OFC implementations have this API for now:
-    * Trema with Trema App - Sliceable Routing Switch (OSS)
-    * ProgramableFlow Controller with REST API (NEC Commercial Product)
+
+* Trema with Trema App - Sliceable Routing Switch (OSS)
+* ProgramableFlow Controller with REST API (NEC Commercial Product)
 
 The NEC VIF Driver, to collaborate with OpenStack Nova, informs the OFC
 of a VIF - OpenFlow Port mapping via Quantum NEC Extension API (vifinfo),
@@ -51,12 +52,12 @@ Requirements
 Directory Layout
 ----------------
 
-quantum-nec-of-plugin/
-    nova/                      ... NEC VIF driver & NEC Extension client
-    quantum/                   ... code for Quantum server
-        extentions/            ... NEC Extensions
-        quantum/plugins/nec/   ... Quantum NEC OpenFlow Plugin
-    quickstart/                ... QuickStart Installer for Nova and Quantum
+    quantum-nec-of-plugin/
+        nova/                      ... NEC VIF driver & NEC Extension client
+        quantum/                   ... code for Quantum server
+            extentions/            ... NEC Extensions
+            quantum/plugins/nec/   ... Quantum NEC OpenFlow Plugin
+        quickstart/                ... QuickStart Installer for Nova and Quantum
 
 
 Installations
@@ -70,7 +71,9 @@ please try the quick-start installer or refer to the scripts in the quick-start
 installer.
 See [Quick Start Installer](quickstart/README.md) for more information.
 
-as follo
+With Quick Start Installer, you can build an OpenStack+OpenFlow environment
+and launch VM as follows:
+
         $ sudo apt-get install git-core
         $ git clone git://github.com/nec-openstack/quantum-nec-of-plugin.git
         $ cd quantum-nec-of-plugin/quickstart
