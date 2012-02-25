@@ -64,12 +64,14 @@ Run `installer.sh', and wait...
 
 After installation has finished, check console output and log files.
 The log files can be found at:
-* Nova    /var/log/nova/
-* Quantum quantum-nec-of-plugin/quantum/quantum-server.log
-* Trema   quantum-nec-of-plugin/quickstart/trema/trema/tmp/log/
+
+* Nova:    /var/log/nova/
+* Quantum: quantum-nec-of-plugin/quantum/quantum-server.log
+* Trema:   quantum-nec-of-plugin/quickstart/trema/trema/tmp/log/
 
 If you has configured USER and PROJECT,
 you can find the following items are created:
+
 * script "quickstart/create-private-network.sh"
   (This script create two networks and plug veth interfaces into each network.)
 * credentials under quickstart/creds/
