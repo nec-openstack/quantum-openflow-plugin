@@ -21,9 +21,9 @@ USER="usagi"
 PROJECT="usapro"
 
 # Public Image to register (Optional)
-IMAGE_TAR="tty.tgz"
-IMAGE_URL="http://images.ansolabs.com/tty.tgz"
+#IMAGE_TAR="tty.tgz"
+#IMAGE_URL="http://images.ansolabs.com/tty.tgz"
 #IMAGE_TAR="natty-server-cloudimg-amd64.tar.gz"
 #IMAGE_URL="http://uec-images.ubuntu.com/natty/current/natty-server-cloudimg-amd64.tar.gz"
-#IMAGE_TAR="natty-server-cloudimg-i386.tar.gz"
-#IMAGE_URL="http://uec-images.ubuntu.com/natty/current/natty-server-cloudimg-i386.tar.gz"
+IMAGE_TAR="natty-server-cloudimg-i386.tar.gz"
+IMAGE_URL="http://uec-images.ubuntu.com/natty/current/natty-server-cloudimg-i386.tar.gz"

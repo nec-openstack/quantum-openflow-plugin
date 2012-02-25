@@ -35,7 +35,7 @@ Target Softwares
 Configurations
 --------------
 
-Configure `quickstart/installerrc'.  Set following parameters:
+Configure `quickstart/installerrc'.  Set the following parameters:
 
 * HOST_IP: (Option) IP Address of the target HOST
   (If HOST_IP is not specified, the installer use eth0's IP address.)
