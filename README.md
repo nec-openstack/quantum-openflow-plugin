@@ -27,8 +27,8 @@ Related Projects
 ----------------
 
 * Quantum: https://github.com/openstack/quantum
-* OpenStack: http://www.openstack.org/
-* Trema: http://trema.github.com/trema/
+* OpenStack: http://www.openstack.org
+* Trema: http://trema.github.com/trema
 * Trema App - Slicesable Routing Switch:
   https://github.com/trema/apps/tree/master/sliceable_routing_switch
 
@@ -63,13 +63,15 @@ Directory Layout
 Installations
 -------------
 
-See [Manual Installation Guide](docs/manual_install.md).
+See [Manual Installation Guide][manual-install].
+[manual-install]:https://github.com/nec-openstack/quantum-nec-of-plugin/blob/master/docs/manual_install.md
 
 We also provide a quick-start installer which installs and configures Nova,
 Quantum and Trema on one machine.  If you are not familiar with Nova or Trema,
 please try the quick-start installer or refer to the scripts in the quick-start
 installer.
-See [Quick Start Installer](quickstart/README.md) for more information.
+See [Quick Start Installer][quick-start] for more information.
+[quick-start]: https://github.com/nec-openstack/quantum-nec-of-plugin/blob/master/quickstart/README.md
 
 With Quick Start Installer, you can build an OpenStack+OpenFlow environment
 and launch VM as follows:
