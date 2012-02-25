@@ -69,7 +69,7 @@ The log files can be found at:
 * Quantum: quantum-nec-of-plugin/quantum/quantum-server.log
 * Trema:   quantum-nec-of-plugin/quickstart/trema/trema/tmp/log/
 
-If you has configured USER and PROJECT,
+If you have configured USER and PROJECT,
 you can find the following items are created:
 
 * script "quickstart/create-private-network.sh"
