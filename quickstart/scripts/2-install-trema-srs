@@ -15,8 +15,8 @@ pkgs="gcc make ruby ruby-dev irb file libjson-perl libpcap-dev sqlite3 \
 libsqlite3-dev apache2-mpm-prefork libdbi-perl libdbd-sqlite3-perl \
 libglib2.0-0"
 sudo apt-get -y install $pkgs
-git clone http://github.com/trema/trema.git $TREMA_DIR/trema
-git clone http://github.com/trema/apps.git $TREMA_DIR/apps
+git clone https://github.com/trema/trema.git $TREMA_DIR/trema
+git clone https://github.com/trema/apps.git $TREMA_DIR/apps
 
 # build
 pushd $TREMA_DIR/trema
