@@ -13,7 +13,7 @@ and this plugin controls the OFC through a REST API.
 Two OFC implementations have this API for now:
 
 * Trema with Trema App - Sliceable Routing Switch (OSS)
-* ProgramableFlow Controller with REST API (NEC Commercial Product)
+* ProgrammableFlow Controller with REST API (NEC Commercial Product)
 
 The NEC VIF Driver, to collaborate with OpenStack Nova, informs the OFC
 of a VIF - OpenFlow Port mapping via Quantum NEC Extension API (vifinfo),
@@ -29,7 +29,7 @@ Related Projects
 * Quantum: https://github.com/openstack/quantum
 * OpenStack: http://www.openstack.org
 * Trema: http://trema.github.com/trema
-* Trema App - Slicesable Routing Switch:
+* Trema App - Sliceable Routing Switch:
   https://github.com/trema/apps/tree/master/sliceable_routing_switch
 
 
@@ -39,7 +39,7 @@ Requirements
 
 * Diablo version of OpenStack Nova and Quantum
 * OpenFlow Controller: Trema with Trema App - Sliceable Routing Switch,
-  ProgramableFlow Controller with REST API, or
+  ProgrammableFlow Controller with REST API, or
   an OFC that has the same functionalities and REST API
   as Sliceable Routing Switch has.
   For details see the implementation of Sliceable Routing Switch
