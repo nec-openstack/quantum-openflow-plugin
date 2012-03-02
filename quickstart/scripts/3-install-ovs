@@ -12,7 +12,10 @@ pkgs="openvswitch-switch openvswitch-datapath-dkms"
 sudo apt-get install -y $pkgs
 
 # set default dridge
-sudo ovs-vsctl add-br $BRIDGE
+if ! sudo ovs-vsctl list-br | grep -q "$BRIDGE"
+then
+	sudo ovs-vsctl add-br $BRIDGE
+fi
 sudo ovs-vsctl set-controller $BRIDGE tcp:$HOST_IP
 
 # allow ovs command

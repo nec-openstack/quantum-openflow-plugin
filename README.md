@@ -28,7 +28,7 @@ Related Projects
 
 * Quantum: https://github.com/openstack/quantum
 * OpenStack: http://www.openstack.org
-* Trema: http://trema.github.com/trema
+* Trema: https://trema.github.com/trema
 * Trema App - Sliceable Routing Switch:
   https://github.com/trema/apps/tree/master/sliceable_routing_switch
 
@@ -77,7 +77,7 @@ With Quick Start Installer, you can build an OpenStack+OpenFlow environment
 and launch VM as follows:
 
         $ sudo apt-get install git-core
-        $ git clone git://github.com/nec-openstack/quantum-nec-of-plugin.git
+        $ git clone https://github.com/nec-openstack/quantum-nec-of-plugin.git
         $ cd quantum-nec-of-plugin/quickstart
         $ ./installer.sh
         $ source creds/novarc

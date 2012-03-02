@@ -34,6 +34,10 @@ sudo apt-get install -y mysql-server
 sudo sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/my.cnf
 sudo service mysql restart
 sleep 1
+if mysql -uroot -p$MYSQL_PASS -e "SHOW DATABASES;" | grep -q "^nova$"
+then
+	mysql -uroot -p$MYSQL_PASS -e "DROP DATABASE nova;"
+fi
 mysql -uroot -p$MYSQL_PASS << END
 CREATE DATABASE nova;
 GRANT ALL PRIVILEGES ON *.* TO 'nova'@'%' WITH GRANT OPTION;
@@ -51,7 +55,13 @@ then
 fi
 
 # network config
-sudo su - -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+if [ `cat /proc/sys/net/ipv4/ip_forward` = 0 ]
+then
+	sudo su - -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+fi
 
 # commentout nova-compute.conf
-sudo sed -i -e "/^[^#]/s/^/#/" /etc/nova/nova-compute.conf
+if [ -f /etc/nova/nova-compute.conf ]
+then
+	sudo sed -i -e "/^[^#]/s/^/#/" /etc/nova/nova-compute.conf
+fi

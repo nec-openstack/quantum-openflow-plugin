@@ -76,6 +76,14 @@ class NECPlugin(QuantumPluginBase):
             ndb.add_ofn_tenant(ofn_tenant_id, tenant_id)
         return ofn_tenant_id
 
+    def _delete_orphan_ofn_tenant(self, tenant_id):
+        num_of_networks = len(db.network_list(tenant_id))
+        if num_of_networks == 0:
+            ofn_tenant = ndb.get_ofn_tenant(tenant_id)
+            if ofn_tenant and self.conf.auto_id_tenant:
+                self.ofn.ofn_delete_tenant(ofn_tenant.ofn_tenant_id)
+                ndb.del_ofn_tenant(tenant_id)
+
     def _get_ofn_tenant_id(self, tenant_id):
         ofn_tenant = ndb.get_ofn_tenant(tenant_id)
         if not ofn_tenant:
@@ -245,7 +253,9 @@ class NECPlugin(QuantumPluginBase):
         ofn_network_id = self._get_ofn_network_id(network_id)
         self.ofn.ofn_delete_network(ofn_tenant_id, ofn_network_id)
         ndb.del_ofn_network(network_id)
+
         db.network_destroy(network_id)
+        self._delete_orphan_ofn_tenant(tenant_id)
         return {'net-id': network.uuid}
 
     def rename_network(self, tenant_id, network_id, new_name):

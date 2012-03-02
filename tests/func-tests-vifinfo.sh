@@ -2,12 +2,16 @@
 
 dir="${0%/*}"
 cli="../nova/vifinfo_cli.py -v --logfile=$dir/vifinfo_cli.log"
-vif_id="2920bbd3-a678-471a-ad9d-b043c202f8d5"
+vif_id="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
 vif_dpid="0x00000a001"
 vif_port=1
 vif_dpid_n="0x00000a002"
 vif_port_n=2
 
+if [ -n "$1" ]
+then
+	vif_id="$1"
+fi
 
 
 echo "# create vifinfo #"

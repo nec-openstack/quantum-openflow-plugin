@@ -51,6 +51,10 @@ do
 done
 
 # create quantum database
+if mysql -uroot -p$MYSQL_PASS -e "SHOW DATABASES;" | grep -q "^$QDB_NAME$"
+then
+	mysql -uroot -p$MYSQL_PASS -e "DROP DATABASE $QDB_NAME;"
+fi
 mysql -uroot -p$MYSQL_PASS << END
 CREATE DATABASE $QDB_NAME;
 GRANT ALL PRIVILEGES ON $QDB_NAME.* TO '$QDB_USER'@'%';

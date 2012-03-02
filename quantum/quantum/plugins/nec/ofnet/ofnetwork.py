@@ -42,20 +42,19 @@ class OFNetwork(object):
         LOG.debug("request(): OFC returns %s(%s)" % (res.status, res.reason))
         status_code = self.get_status_code(res)
         data = res.read()
-        if method in ("GET", "POST"):
-            if res.status != 200:
+        if method in ("GET"):
+            if res.status != httplib.OK:
+                """200"""
                 LOG.warning("request(): bad response `%s' for method `%s'" %
                             (res.status, method))
-        elif method in ("DELETE", "PUT"):
-            if res.status != 204:
+        elif method in ("POST", "DELETE", "PUT"):
+            if res.status != httplib.ACCEPTED:
+                """202"""
                 LOG.warning("request(): bad response `%s' for method `%s'" %
                             (res.status, method))
         LOG.debug("request(): OFC returns data = %s" % (data))
 
-        if status_code in (httplib.OK,
-                           httplib.CREATED,
-                           httplib.ACCEPTED,
-                           httplib.NO_CONTENT):
+        if status_code in (httplib.OK, httplib.ACCEPTED):
             return self.deserialize(data, status_code)
         else:
             error_message = data

@@ -45,13 +45,16 @@ set_nova_conf() {
 		    -e "s/@HOST_IP@/$HOST_IP/g" \
 		    "$base" > $filled
 	fi
-	sudo cp -f $filled $target
+	sudo ln -sb $filled $target
 }
 
 set_nec_plugin_nova_code() {
 	src="$NEC_PLUGIN_DIR"
-	target="/usr/lib/python2.7/dist-packages/nova/virt/libvirt/nec"
-	sudo ln -sf $src/nova "$target"
+	target="/usr/share/pyshared/nova/virt/libvirt/nec"
+	if ! [ -d "$target" ]
+	then
+		sudo ln -sf $src/nova "$target"
+	fi
 }
 
 apply_nova_patch() {

@@ -8,7 +8,7 @@
 
 
 # install git 
-[ -f /usr/bin/git ] || apt-get -y install git-core
+[ -f /usr/bin/git ] || sudo apt-get -y install git-core
 
 # get code
 pkgs="gcc make ruby ruby-dev irb file libjson-perl libpcap-dev sqlite3 \
@@ -32,11 +32,15 @@ for dir in apache db log script
 do
 	mkdir -p $VAR_DIR/$dir
 done
+sudo mkdir -p /tmp/log
+sudo mkdir -p /tmp/sock
+sudo mkdir -p /tmp/pid
+sudo chmod -R 755 /tmp/log /tmp/pid /tmp/sock
 
 # config HTTP Server for sliceable_routing_switch
 base="$INSTALLER_DIR/sliceable_routing_switch.base"
 sed -e "s|@VAR@|$VAR_DIR|" $base > $VAR_DIR/apache/sliceable_routing_switch
-sudo ln -s $VAR_DIR/apache/sliceable_routing_switch /etc/apache2/sites-available
+sudo ln -sb $VAR_DIR/apache/sliceable_routing_switch /etc/apache2/sites-available
 sudo a2enmod rewrite actions
 sudo a2ensite sliceable_routing_switch
 
@@ -59,5 +63,5 @@ sudo /etc/init.d/apache2 reload
 
 # start trema
 pushd $TREMA_DIR/trema
-	sudo ./trema run -d -c $VAR_DIR/srs.conf
+	sudo TREMA_TMP=/tmp ./trema run -d -c $VAR_DIR/srs.conf
 popd

@@ -17,12 +17,12 @@ Installations
 
 ### Quantum
 
-Download the Quantum Diablo version and the NEC OpenFlow Plugin.
-Then copy the NEC OpenFlow Plugin into the Quantum directory.
+Download the Quantum Diablo version and this plugin.
+Then copy the plugin into the Quantum directory.
 e.g.:
 
         $ sudo apt-get install git-core
-        $ git clone git://github.com/nec-openstack/quantum-nec-of-plugin.git
+        $ git clone https://github.com/nec-openstack/quantum-nec-of-plugin.git
         $ wget http://launchpad.net/quantum/diablo/2011.3/+download/quantum-2011.3.tar.gz
         $ tar xf quantum-2011.3.tar.gz
         $ cp -ir quantum-nec-of-plugin/quantum/* quantum-2011.3/
@@ -56,14 +56,14 @@ e.g. link the NEC VIF driver to python Nova libraries:
 Install prerequisite packages for Trema and REST API.
 
         $ sudo apt-get install gcc make ruby ruby-dev irb sudo file libpcap-dev libsqlite3-dev sqlite3 apache2-mpm-prefork libjson-perl libdbi-perl libdbd-sqlite3-perl
-        $ git clone git://github.com/trema/trema.git trema
-        $ git clone git://github.com/trema/apps.git apps
+        $ git clone https://github.com/trema/trema.git trema
+        $ git clone https://github.com/trema/apps.git apps
 
 NOTE: These repositories are active.
 The process of installations and configurations could be changed.
 Check the following links:
 
-* Trema: http://trema.github.com/trema/
+* Trema: https://trema.github.com/trema/
 * Slicesable Routing Switch:
   https://github.com/trema/apps/tree/master/sliceable_routing_switch
 
@@ -89,12 +89,12 @@ Configurations
 
 ### Quantum
 
-At Quantum Server, put the NEC OpenFlow Plugin to the current quantum plugin.
+At Quantum Server, put the plugin to the current quantum plugin.
 Edit quantum-2011.3/quantum/plugins.ini and change the provider to be:
 
         provider = quantum.plugins.nec.nec_plugin.NECPlugin
 
-Create a database for the NEC OpenFlow Plugin (same as FakePlugin).
+Create a database for the plugin (same as FakePlugin).
 e.g. create database "quantum_nec" and user "quantum" at MySQL:
 
         $ mysql -u root
@@ -103,7 +103,7 @@ e.g. create database "quantum_nec" and user "quantum" at MySQL:
         mysql> GRANT USAGE ON quantum_nec.* to quantum@'%' IDENTIFIED BY 'quantumpass';
         mysql> FLUSH PRIVILEGES;
 
-Disable default Quantum Extentions not supported by this plugin.
+Disable default Quantum Extentions not supported by the plugin.
 NEC extension "vifinfo" must be enabled.
 
         $ cd quantum-2011.3/extensions
@@ -113,10 +113,10 @@ NEC extension "vifinfo" must be enabled.
         $ mv portprofile.py _portprofile.py
         $ mv qos.py _qos.py
 
-Edit the NEC OpenFlow Plugin configuration file
+Edit the plugin configuration file
 "quantum-2011.3/quantum/plugins/nec/conf/nec_plugin.ini".
 Make sure it matches your database configuration and OFC configuration.
-See comments in the NEC OpenFlow Plugin configuration file for more information.
+See comments in the plugin configuration file for more information.
 An example of configuration:
 
         [DATABASE]
@@ -199,7 +199,7 @@ And fix file path and other configurations as you like.
         $ sudo vi /etc/apache2/sites-available/sliceable_routing_switch
 
 Configure Apache2 to ignore tenants.
-The NEC OpenFlow Plugin accesses the OFC REST API with tenant name
+This plugin accesses the OFC REST API with tenant name
 like "http://tremahost/tenants/hoge/networks".
 However, Sliceable Routing Switch REST API does NOT handle tenants.
 To solve this difference, add the following RewriteRule
