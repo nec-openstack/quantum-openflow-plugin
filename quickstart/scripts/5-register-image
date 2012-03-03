@@ -38,7 +38,7 @@ then
 		image="${INSTALLER_DIR}/$IMAGE_TAR"
 	popd
 fi
-prefix=$(echo "$IMAGE_TAR" | sed -e "s/.tar.gz$//" -e "s/.tgz$//")
+prefix=$(echo "${IMAGE_TAR##*/}" | sed -e "s/.tar.gz$//" -e "s/.tgz$//")
 
 # extract image
 mkdir -p "$tmp_dir"
@@ -50,32 +50,36 @@ then
 	$nova_manage image convert "$tmp_dir"
 elif ubuntu_cloudimg? "$tmp_dir/$prefix"
 then
-	#$nova_manage image all_register \
-	#	--image=$prefix.img \
-	#	--kernel=$prefix-vmlinuz-virtual \
-	#	--ram=$prefix-initrd-virtual \
-	#	--name=$prefix \
-	#	--public=T \
-	#	--arch=$(guess_arch $prefix)
-	ret=$($nova_manage image kernel_register \
-		--path=$prefix-vmlinuz-virtual \
-		--owner=admin
-		--name=$prefix-kernel \
-		--public=T \
-		--arch=$(guess_arch $prefix))
-	kid=$(echo $ret | gawk '{print $4}')
-	if ! [ $kid -gt 0 ]
+	if [ -f "$tmp_dir/${prefix}-initrd-virtual" ]
 	then
-		echo "Error: register kernel image failed."
-		exit 1
+		$nova_manage image all_register \
+			--image=$tmp_dir/${prefix}.img \
+			--kernel=$tmp_dir/${prefix}-vmlinuz-virtual \
+			--ram=$tmp_dir/${prefix}-initrd-virtual \
+			--name=$prefix \
+			--public=T \
+			--arch=$(guess_arch $prefix)
+	else
+		ret=$($nova_manage image kernel_register \
+			--path=$tmp_dir/${prefix}-vmlinuz-virtual \
+			--owner=admin \
+			--name=${prefix}-kernel \
+			--public=T \
+			--arch=$(guess_arch $prefix))
+		kid=$(echo $ret | gawk '{print $4}')
+		if ! [ $kid -gt 0 ]
+		then
+			echo "Error: register kernel image failed."
+			exit 1
+		fi
+		$nova_manage image image_register \
+			--path=$tmp_dir/${prefix}.img \
+			--owner=admin \
+			--name=$prefix \
+			--public=T \
+			--arch=$(guess_arch $prefix) \
+			--kernel=$kid
 	fi
-	$nova_manage image image_register \
-		--path=$prefix.img \
-		--owner=admin
-		--name=$prefix \
-		--public=T \
-		--arch=$(guess_arch $prefix)
-		--kernel=$kid
 else
 	echo "[WARN] $0: Unkown IMAGE format, skip register image."
 fi
