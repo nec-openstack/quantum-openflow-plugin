@@ -221,16 +221,22 @@ class NECPlugin(QuantumPluginBase):
         ofn_tenant_id = self._create_ofn_tenant(tenant_id)
         new_network = db.network_create(tenant_id, network_name)
 
-        if self.conf.auto_id_network:
-            """Auto ID is ture. id include response."""
-            res = self.ofn.ofn_create_network(ofn_tenant_id, network_name)
-            ofn_network_id = res['id']
-        else:
-            """Auto ID is false. use uuid for ofn_network."""
-            ofn_network_id = new_network.uuid
-            res = self.ofn.ofn_create_network(ofn_tenant_id,
-                                              network_name,
-                                              ofn_network_id)
+        try:
+            if self.conf.auto_id_network:
+                """Auto ID is ture. id include response."""
+                res = self.ofn.ofn_create_network(ofn_tenant_id, network_name)
+                ofn_network_id = res['id']
+            else:
+                """Auto ID is false. use uuid for ofn_network."""
+                ofn_network_id = new_network.uuid
+                res = self.ofn.ofn_create_network(ofn_tenant_id,
+                                                  network_name,
+                                                  ofn_network_id)
+        except Exception:
+            db.network_destroy(new_network.uuid)
+            LOG.error("create_network() failed on OFC.")
+            raise h_exc.HTTPInternalServerError(\
+              "Failed to create network on OFC.")
 
         LOG.debug("create_network(): ofn_create_network() return '%s'" % res)
         LOG.debug("create_network(): ofn_network_id = %s" % ofn_network_id)
