@@ -139,12 +139,16 @@ class NECPlugin(QuantumPluginBase):
 
     def _port_attachable(self, port):
         if not port:
+            LOG.debug("_port_attachable(): no port.")
             return False
         if not port.interface_id:
+            LOG.debug("_port_attachable(): no port.interface_id.")
             return False
         if not port.state.upper() in "ACTIVE":
+            LOG.debug("_port_attachable(): port.state is not ACTIVE.")
             return False
         if not ndb.get_vifinfo(port.interface_id):
+            LOG.debug("_port_attachable(): no vifinfo for the port.")
             return False
         return True
 
@@ -380,7 +384,7 @@ class NECPlugin(QuantumPluginBase):
                                       att_id=interface_id,
                                       att_port_id=p.uuid)
 
-        db.port_set_attachment(port_id, network_id, interface_id)
+        port = db.port_set_attachment(port_id, network_id, interface_id)
         if self._port_attachable(port):
             self._attach(tenant_id, network_id, port_id, interface_id)
 
