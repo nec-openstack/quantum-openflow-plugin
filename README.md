@@ -28,7 +28,7 @@ Related Projects
 
 * Quantum: https://github.com/openstack/quantum
 * OpenStack: http://www.openstack.org
-* Trema: https://trema.github.com/trema
+* Trema: http://trema.github.com/trema
 * Trema App - Sliceable Routing Switch:
   https://github.com/trema/apps/tree/master/sliceable_routing_switch
 

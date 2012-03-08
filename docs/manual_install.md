@@ -63,7 +63,7 @@ NOTE: These repositories are active.
 The process of installations and configurations could be changed.
 Check the following links:
 
-* Trema: https://trema.github.com/trema/
+* Trema: http://trema.github.com/trema/
 * Slicesable Routing Switch:
   https://github.com/trema/apps/tree/master/sliceable_routing_switch
 
