@@ -22,10 +22,10 @@ Then copy the plugin into the Quantum directory.
 e.g.:
 
         $ sudo apt-get install git-core
-        $ git clone https://github.com/nec-openstack/quantum-nec-of-plugin.git
+        $ git clone https://github.com/nec-openstack/quantum-openflow-plugin.git
         $ wget http://launchpad.net/quantum/diablo/2011.3/+download/quantum-2011.3.tar.gz
         $ tar xf quantum-2011.3.tar.gz
-        $ cp -ir quantum-nec-of-plugin/quantum/* quantum-2011.3/
+        $ cp -ir quantum-openflow-plugin/quantum/* quantum-2011.3/
 
 Install a database engine supported by sqlalchemy.
 (You can use the same database engine for another OpenStack component.)
@@ -48,7 +48,7 @@ e.g. install OpenStack Nova and Glance with deb packages:
 Install the NEC VIF driver on nova-compute node(s).
 e.g. link the NEC VIF driver to python Nova libraries:
 
-        $ sudo ln -s quantum-nec-of-plugin/nova /usr/lib/python2.7/dist-packages/nova/virt/libvirt/nec
+        $ sudo ln -s quantum-openflow-plugin/nova /usr/lib/python2.7/dist-packages/nova/virt/libvirt/nec
 
 
 ### OpenFlow Controller (Trema)

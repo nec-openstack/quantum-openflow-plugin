@@ -52,7 +52,7 @@ Requirements
 Directory Layout
 ----------------
 
-    quantum-nec-of-plugin/
+    quantum-openflow-plugin/
         nova/                      ... NEC VIF driver & NEC Extension client
         quantum/                   ... code for Quantum server
             extentions/            ... NEC Extensions
@@ -64,21 +64,21 @@ Installations
 -------------
 
 See [Manual Installation Guide][manual-install].
-[manual-install]:https://github.com/nec-openstack/quantum-nec-of-plugin/blob/master/docs/manual_install.md
+[manual-install]:https://github.com/nec-openstack/quantum-openflow-plugin/blob/master/docs/manual_install.md
 
 We also provide a quick-start installer which installs and configures Nova,
 Quantum and Trema on one machine.  If you are not familiar with Nova or Trema,
 please try the quick-start installer or refer to the scripts in the quick-start
 installer.
 See [Quick Start Installer][quick-start] for more information.
-[quick-start]: https://github.com/nec-openstack/quantum-nec-of-plugin/blob/master/quickstart/README.md
+[quick-start]: https://github.com/nec-openstack/quantum-openflow-plugin/blob/master/quickstart/README.md
 
 With Quick Start Installer, you can build an OpenStack+OpenFlow environment
 and launch VM as follows:
 
         $ sudo apt-get install git-core
-        $ git clone https://github.com/nec-openstack/quantum-nec-of-plugin.git
-        $ cd quantum-nec-of-plugin/quickstart
+        $ git clone https://github.com/nec-openstack/quantum-openflow-plugin.git
+        $ cd quantum-openflow-plugin/quickstart
         $ ./installer.sh
         $ source creds/novarc
         $ ./create-private-network.sh

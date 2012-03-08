@@ -66,8 +66,8 @@ After installation has finished, check console output and log files.
 The log files can be found at:
 
 * Nova:    /var/log/nova/
-* Quantum: quantum-nec-of-plugin/quantum/quantum-server.log
-* Trema:   quantum-nec-of-plugin/quickstart/trema/trema/tmp/log/
+* Quantum: quantum-openflow-plugin/quantum/quantum-server.log
+* Trema:   quantum-openflow-plugin/quickstart/trema/trema/tmp/log/
 
 If you have configured USER and PROJECT,
 you can find the following items are created:
