@@ -50,7 +50,7 @@ set_nova_conf() {
 
 set_nec_plugin_nova_code() {
 	src="$NEC_PLUGIN_DIR"
-	target="/usr/share/pyshared/nova/virt/libvirt/nec"
+	target="/usr/lib/python2.7/dist-packages/nova/virt/libvirt/nec"
 	if ! [ -d "$target" ]
 	then
 		sudo ln -sf $src/nova "$target"
