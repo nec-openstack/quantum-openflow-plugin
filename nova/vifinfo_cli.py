@@ -19,6 +19,17 @@ LOG = logging.getLogger('vifinfo_cli')
 
 def help():
     print "\nCommands:"
+    commands = {
+      "list_vifinfos": {
+        "args": []},
+      "create_vifinfo": {
+        "args": ["vif-id", "datapath-id", "port-no"]},
+      "show_vifinfo": {
+        "args": ["vif-id"]},
+      "delete_vifinfo": {
+        "args": ["vif-id"]},
+      "update_vifinfo": {
+        "args": ["vif-id", "datapath-id", "port-no"]}}
     for k in commands.keys():
         print "    %s %s" % (k,
           " ".join(["<%s>" % y for y in commands[k]['args']]))
