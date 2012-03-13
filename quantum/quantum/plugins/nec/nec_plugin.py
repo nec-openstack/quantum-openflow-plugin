@@ -111,6 +111,15 @@ class NECPlugin(QuantumPluginBase):
               "NotFound ofn_port_id for port_id %s." % port_id)
         return ofn_port.ofn_port_id
 
+    def _get_ofn_filter_id(self, filter_id):
+        ofn_filter = ndb.get_ofn_filter(filter_id)
+        if not ofn_filter:
+            LOG.warning("_get_ofn_filter_id(): ofn_filter not found "
+                        "(filter_id = %s)" % filter_id)
+            raise h_exc.HTTPInternalServerError(\
+              "NotFound ofn_filter_id for filter_id %s." % filter_id)
+        return ofn_filter.ofn_filter_id
+
     def _get_network(self, tenant_id, network_id):
         network = db.network_get(network_id)
         # Network must exist and belong to the appropriate tenant.
@@ -131,6 +140,21 @@ class NECPlugin(QuantumPluginBase):
                         (network_id, port_id, port.network_id))
             raise exc.PortNotFound(net_id=network_id, port_id=port_id)
         return port
+
+    def _get_filter(self, tenant_id, network_id, filter_id):
+        network = self._get_network(tenant_id, network_id)
+        filter = ndb.get_filter(filter_id, network_id)
+        if not filter:
+            raise h_exc.HTTPNotFound("Filter %s could not be found "
+                                    "on network %s" % (filter_id, network_id))
+        # Filter must exist and belong to the appropriate network.
+        if filter.network_id != network_id:
+            LOG.warning("_get_filter(): mismatch network_id = %s, "
+                        "filter_id = %s, port.network_id = %s" %
+                        (network_id, filter_id, filter.network_id))
+            raise h_exc.HTTPNotFound("Filter %s could not be found "
+                                    "on network %s" % (filter_id, network_id))
+        return filter
 
     def _validate_port_state(self, port_state):
         if port_state.upper() not in ("ACTIVE", "DOWN"):
@@ -179,6 +203,10 @@ class NECPlugin(QuantumPluginBase):
         LOG.debug("_attach(): ofn_port_id = %s" % ofn_port_id)
         ndb.add_ofn_port(ofn_port_id, port_id)
 
+        port = self._get_port(tenant_id, network_id, port_id)
+        for filter in ndb.get_associated_filters(network_id, port_id):
+            self._enable_filter(tenant_id, filter, network_id, port)
+
     def _detach(self, tenant_id, network_id, port_id):
         LOG.debug("_detach(): called")
         ofn_tenant_id = self._get_ofn_tenant_id(tenant_id)
@@ -189,6 +217,10 @@ class NECPlugin(QuantumPluginBase):
                                        ofn_port_id)
         LOG.debug("_detach(): ofn_delete_port() return '%s'" % res)
         ndb.del_ofn_port(port_id)
+
+        port = self._get_port(tenant_id, network_id, port_id)
+        for filter in ndb.get_associated_filters(network_id, port_id):
+            self._disable_filter(tenant_id, filter.uuid)
 
     def get_all_networks(self, tenant_id):
         """
@@ -399,7 +431,7 @@ class NECPlugin(QuantumPluginBase):
             self._detach(tenant_id, network_id, port_id)
         db.port_unset_attachment(port_id, network_id)
 
-    supported_extension_aliases = ["VIFINFOS"]
+    supported_extension_aliases = ["VIFINFOS", "FILTERS"]
 
     def get_vifinfo(self, interface_id):
         LOG.debug("get_vifinfo() called")
@@ -434,3 +466,101 @@ class NECPlugin(QuantumPluginBase):
             network = db.network_get(port.network_id)
             self._detach(network.tenant_id, network.uuid, port.uuid)
         ndb.del_vifinfo(interface_id)
+
+    def _enable_filter(self, tenant_id, filter, network_id, port=None):
+        LOG.debug("_enable_filter() called.")
+        ofn_tenant_id = self._get_ofn_tenant_id(tenant_id)
+        ofn_network_id = self._get_ofn_network_id(network_id)
+        if port:
+            vifinfo = ndb.get_vifinfo(port.interface_id)
+            if not vifinfo:
+                LOG.error("_enable_filter(): failed to get vifinfo of "
+                          "port.uuid %s port.interface_id %s" %
+                          (port.uuid, port.interface_id))
+                raise h_exc.HTTPInternalServerError(\
+                  "NotFound vifinfo of port %s." % port.uuid)
+        else:
+            vifinfo = None
+
+        if self.conf.auto_id_filter:
+            """id include response."""
+            res = self.ofn.ofn_create_filter(ofn_tenant_id, ofn_network_id,
+                                             filter, vifinfo)
+            ofn_filter_id = res['id']
+        else:
+            """use uuid for ofn_filter."""
+            ofn_filter_id = filter.uuid
+            res = self.ofn.ofn_create_filter(ofn_tenant_id, ofn_network_id,
+                                             filter, vifinfo, ofn_filter_id)
+        LOG.debug("_enable_filter(): ofn_create_filter() return '%s'", res)
+        LOG.debug("_enable_filter(): ofn_filter_id = %s", ofn_filter_id)
+        ndb.add_ofn_filter(ofn_filter_id, filter.uuid)
+
+    def _disable_filter(self, tenant_id, filter_id):
+        LOG.debug("_disable_filter() called.")
+        ofn_tenant_id = self._get_ofn_tenant_id(tenant_id)
+        ofn_filter_id = self._get_ofn_filter_id(filter_id)
+        res = self.ofn.ofn_delete_filter(ofn_tenant_id, ofn_filter_id)
+        LOG.debug("_disable_filter(): ofn_delete_filter() return '%s'" % res)
+        ndb.del_ofn_filter(filter_id)
+
+    def _validate_port_in_filter_dict(self, tenant_id, network_id, filter_dict):
+        condition = filter_dict.get('condition', None)
+        if condition:
+            port_id = filter_dict['condition'].get('in_port', None)
+            if port_id:
+                port = self._get_port(tenant_id, network_id, port_id)
+
+    def get_filter(self, tenant_id, network_id, filter_id):
+        LOG.debug("get_filter() called.")
+        filter = self._get_filter(tenant_id, network_id, filter_id)
+        return filter.dic()
+
+    def list_filters(self, tenant_id, network_id):
+        LOG.debug("list_filters() called.")
+        self._get_network(tenant_id, network_id)
+        filters = ndb.list_filters(network_id)
+        id_list = [{'id': filter.uuid} for filter in filters]
+        return {'filters': id_list}
+
+    def add_filter(self, tenant_id, network_id, filter_dict):
+        LOG.debug("add_filter() called")
+        self._get_network(tenant_id, network_id)
+        self._validate_port_in_filter_dict(tenant_id, network_id, filter_dict)
+        filter = ndb.add_filter(network_id, filter_dict)
+        if filter.in_port:
+            port = self._get_port(tenant_id, network_id, filter.in_port)
+            if self._port_attachable(port):
+                self._enable_filter(tenant_id, filter, network_id, port)
+        else:
+            self._enable_filter(tenant_id, filter, network_id)
+        return {'filter': {'id': filter.uuid}}
+
+    def update_filter(self, tenant_id, network_id, filter_id, filter_dict):
+        LOG.debug("update_filter() called")
+        self._validate_port_in_filter_dict(tenant_id, network_id, filter_dict)
+        filter = self._get_filter(tenant_id, network_id, filter_id)
+        if filter.in_port:
+            port = self._get_port(tenant_id, network_id, filter.in_port)
+            if self._port_attachable(port):
+                self._disable_filter(tenant_id, filter_id)
+        else:
+            self._disable_filter(tenant_id, filter_id)
+        filter = ndb.update_filter(filter_id, network_id, filter_dict)
+        if filter.in_port:
+            port = self._get_port(tenant_id, network_id, filter.in_port)
+            if self._port_attachable(port):
+                self._enable_filter(tenant_id, filter, network_id, port)
+        else:
+            self._enable_filter(tenant_id, filter, network_id)
+
+    def delete_filter(self, tenant_id, network_id, filter_id):
+        LOG.debug("delete_filter() called")
+        filter = self._get_filter(tenant_id, network_id, filter_id)
+        if filter.in_port:
+            port = self._get_port(tenant_id, network_id, filter.in_port)
+            if self._port_attachable(port):
+                self._disable_filter(tenant_id, filter_id)
+        else:
+            self._disable_filter(tenant_id, filter_id)
+        ndb.del_filter(filter_id, network_id)

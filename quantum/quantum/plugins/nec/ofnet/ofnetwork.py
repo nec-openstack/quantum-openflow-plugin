@@ -4,6 +4,7 @@
 #
 
 import httplib
+import json
 import logging
 from webob import exc
 
@@ -16,20 +17,25 @@ networks_path = "/tenants/%s/networks"
 network_path = "/tenants/%s/networks/%s"
 ports_path = "/tenants/%s/networks/%s/ports"
 port_path = "/tenants/%s/networks/%s/ports/%s"
+filters_path = "/tenants/%s/filters"
+filter_path = "/tenants/%s/filters/%s"
 
 LOG = logging.getLogger('nec_plugin.ofnetwork')
 
 
-class OFNetwork(object):
+class OFNetwork():
 
     def __init__(self, host='localhost', port=8888):
         self.ofn_server = "%s:%s" % (host, port)
         self.format = "json"
 
-    def request(self, method, path, body=None):
+    def request(self, method, path, body=None, json_dumps=False):
         LOG.debug("request() called: %s %s %s" % (method, path, body))
         if body:
-            body = self.serialize(body)
+            if json_dumps:
+                body = json.dumps(body)
+            else:
+                body = self.serialize(body)
 
         conn = httplib.HTTPConnection(self.ofn_server)
         if method == "POST" or "PUT":
@@ -218,4 +224,100 @@ class OFNetwork(object):
                   "ofn_network_id = %s, ofn_port_id = %s." %
                   (ofn_tenant_id, ofn_network_id, ofn_port_id))
         path = port_path % (ofn_tenant_id, ofn_network_id, ofn_port_id)
+        res = self.request("DELETE", path)
+
+    def ofn_create_filter(self, ofn_tenant_id, ofn_network_id,
+                          filter, vifinfo=None, ofn_filter_id=None):
+        """
+        Create a filter.
+        """
+        LOG.debug("ofn_create_filter() called: ofn_tenant_id = %s, "
+                  "ofn_network_id = %s, filter = %s, vifinfo = %s, "
+                  "ofn_filter_id = %s" %
+                  (ofn_tenant_id, ofn_network_id,
+                   filter, vifinfo, ofn_filter_id))
+        path = filters_path % ofn_tenant_id
+
+        if filter.action.upper() in "ACCEPT":
+            ofn_action = "ALLOW"
+        elif filter.action.upper() in "DROP":
+            ofn_action = "DENY"
+
+        body = {'priority': filter.priority,
+                'slice': ofn_network_id,
+                'action': ofn_action}
+        ofp_wildcards = ["dl_vlan", "dl_vlan_pcp", "nw_tos"]
+
+        if vifinfo:
+            body['in_datapath_id'] = vifinfo.datapath_id
+            body['in_port'] = vifinfo.port_no
+        else:
+            body['wildcards'] = "in_datapath_id"
+            ofp_wildcards.append("in_port")
+
+        if filter.src_mac:
+            body['dl_src'] = filter.src_mac
+        else:
+            ofp_wildcards.append("dl_src")
+
+        if filter.dst_mac:
+            body['dl_dst'] = filter.dst_mac
+        else:
+            ofp_wildcards.append("dl_dst")
+
+        if filter.src_cidr:
+            body['nw_src'] = filter.src_cidr
+        else:
+            ofp_wildcards.append("nw_src:32")
+
+        if filter.dst_cidr:
+            body['nw_dst'] = filter.dst_cidr
+        else:
+            ofp_wildcards.append("nw_dst:32")
+
+        if filter.protocol:
+            if filter.protocol.upper() in "ICMP":
+                body['dl_type'] = "0x800"
+                body['nw_proto'] = hex(1)
+            elif filter.protocol.upper() in "TCP":
+                body['dl_type'] = "0x800"
+                body['nw_proto'] = hex(6)
+            elif filter.protocol.upper() in "UDP":
+                body['dl_type'] = "0x800"
+                body['nw_proto'] = hex(17)
+            elif filter.protocol.upper() in "ARP":
+                body['dl_type'] = "0x806"
+                ofp_wildcards.append("nw_proto")
+            else:
+                msg = "unknown protocol %s." % filter.protocol
+                LOG.error("ofn_create_filter(): %s" % msg)
+                raise exc.HTTPInternalServerError(msg)
+        else:
+            ofp_wildcards.append("dl_type")
+            ofp_wildcards.append("nw_proto")
+
+        if filter.src_port:
+            body['tp_src'] = hex(filter.src_port)
+        else:
+            ofp_wildcards.append("tp_src")
+
+        if filter.dst_port:
+            body['tp_dst'] = hex(filter.dst_port)
+        else:
+            ofp_wildcards.append("tp_dst")
+
+        if ofn_filter_id:
+            body['id'] = ofn_filter_id
+
+        body['ofp_wildcards'] = ','.join(ofp_wildcards)
+        res = self.request("POST", path, [body], True)
+        return res
+
+    def ofn_delete_filter(self, ofn_tenant_id, ofn_filter_id):
+        """
+        Remove a filter.
+        """
+        LOG.debug("ofn_delete_filter() called: ofn_tenant_id = %s, "
+                  "ofn_filter_id = %s" % (ofn_tenant_id, ofn_filter_id))
+        path = filter_path % (ofn_tenant_id, ofn_filter_id)
         res = self.request("DELETE", path)

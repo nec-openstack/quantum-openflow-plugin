@@ -44,7 +44,8 @@ sed -i -e "s/^provider =.*$/provider = $necplugin/g" $conf
 
 # disable extensions not supported by the NECPlugin 
 QEXT_DIR="$NEC_PLUGIN_DIR/quantum/extensions"
-ls -1 "$QEXT_DIR" | grep -e "^[^_].*.py$" | grep -v "^vifinfo.py$" \
+ls -1 "$QEXT_DIR" | grep -e "^[^_].*.py$" \
+	| grep -v -e "^vifinfo.py$" -e "filter.py" \
 	| while read file
 do
 	mv "$QEXT_DIR/$file" "$QEXT_DIR/_$file"
