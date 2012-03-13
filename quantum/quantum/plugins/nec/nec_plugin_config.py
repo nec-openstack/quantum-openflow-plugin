@@ -57,10 +57,12 @@ class NECConfig(object):
         self.auto_id_tenant = config.getboolean("AutoID", "tenant")
         self.auto_id_network = config.getboolean("AutoID", "network")
         self.auto_id_port = config.getboolean("AutoID", "port")
-        LOG.debug("AutoID tenant: %s, network:%s, port:%s" %
+        self.auto_id_filter = config.getboolean("AutoID", "filter")
+        LOG.debug("AutoID tenant: %s, network:%s, port:%s, filter:%s" %
                   (self.auto_id_tenant,
                    self.auto_id_network,
-                   self.auto_id_port))
+                   self.auto_id_port,
+                   self.auto_id_filter))
 
     def load_vifinfo(self, filename):
         config = ConfigParser.ConfigParser()
