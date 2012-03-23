@@ -50,7 +50,7 @@ class NECConfig(object):
                 dir = os.path.dirname(os.path.realpath(__file__))
                 fullpath = dir + "/" + filename
                 if os.path.exists(fullpath):
-                    self.vif_file = filename
+                    self.vif_file = fullpath
                 else:
                     LOG.warning("Ignore VIF conf file: %s" % filename)
 
