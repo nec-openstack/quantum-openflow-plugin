@@ -89,7 +89,7 @@ class NECConfig(object):
                        vifinfo['datapath_id'],
                        vifinfo['port_no'],
                        vifinfo['vlan_id']))
-            if vifinfo['vifid'] and vifinfo['dpid'] and vifinfo['port_no']:
+            if vifinfo['interface_id'] and vifinfo['datapath_id'] and vifinfo['port_no']:
                 vifinfo_list.append(vifinfo)
             else:
                 LOG.warning("Ignore section=[%s]" % section)
