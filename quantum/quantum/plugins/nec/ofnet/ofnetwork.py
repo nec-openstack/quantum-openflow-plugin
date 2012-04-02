@@ -267,11 +267,21 @@ class OFNetwork():
 
         if filter.src_cidr:
             body['nw_src'] = filter.src_cidr
+            a = body['nw_src'].split("/", 2)
+            if len(a) > 1:
+                wclen = 32 - int(a[1])
+                if wclen > 0:
+                    ofp_wildcards.append("nw_src:%d" % wclen)
         else:
             ofp_wildcards.append("nw_src:32")
 
         if filter.dst_cidr:
             body['nw_dst'] = filter.dst_cidr
+            a = body['nw_src'].split("/", 2)
+            if len(a) > 1:
+                wclen = 32 - int(a[1])
+                if wclen > 0:
+                    ofp_wildcards.append("nw_src:%d" % wclen)
         else:
             ofp_wildcards.append("nw_dst:32")
 
