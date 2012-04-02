@@ -65,6 +65,11 @@ class VifinfoController(common.QuantumController):
         params['port_no'] = ofs_port.get('port_no', None)
         if not params['port_no']:
             raise exc.HTTPBadRequest("No port_no.")
+        vlan_id = ofs_port.get('vlan_id', None)
+        if vlan_id:
+            params['vlan_id'] = vlan_id
+        else:
+            params['vlan_id'] = 65535
         return params
 
     def index(self, request):
@@ -80,7 +85,8 @@ class VifinfoController(common.QuantumController):
         params = self._parse_request_params(request)
         self.plugin.add_vifinfo(params['interface_id'],
                                 params['datapath_id'],
-                                params['port_no'])
+                                params['port_no'],
+                                params['vlan_id'])
         return {'vifinfo': {'interface_id': params['interface_id']}}
 
     def update(self, request, id):
@@ -91,7 +97,8 @@ class VifinfoController(common.QuantumController):
         self.plugin.delete_vifinfo(id)
         self.plugin.add_vifinfo(params['interface_id'],
                                 params['datapath_id'],
-                                params['port_no'])
+                                params['port_no'],
+                                params['vlan_id'])
         return exc.HTTPNoContent()
 
     def delete(self, request, id):

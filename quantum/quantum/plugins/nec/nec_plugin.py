@@ -408,8 +408,9 @@ class NECPlugin(QuantumPluginBase):
             return None
         return {'vifinfo': {
                   'interface_id': vifinfo.interface_id,
-                   'ofs_port': {'datapath_id': vifinfo.datapath_id,
-                                'port_no': str(vifinfo.port_no)}}}
+                  'ofs_port': {'datapath_id': vifinfo.datapath_id,
+                               'port_no': str(vifinfo.port_no),
+                               'vlan_id': str(vifinfo.vlan_id)}}}
 
     def list_vifinfos(self):
         LOG.debug("list_vifinfos() called")
