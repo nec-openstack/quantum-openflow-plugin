@@ -45,7 +45,7 @@ This operation lists VIFInfo IDs.
 
 ### Request
 
-*GET /vifinfos*
+***GET /vifinfos***
 
 This operation does not require a request body.
 
@@ -55,7 +55,7 @@ Normal Response Code(s): 200-OK
 
 Error Response Code(s): 
 
-Body: { "vifinfos": [ { " interface_id": "<VIF ID >" }, ... ] }
+The body of this response contains VIFInfos as list of VIF IDs.
 
 ### Example
 
@@ -82,15 +82,16 @@ Register VIFInfo
 ----------------
 
 This operation registers VIFInfo to this plugin.
+The OpenFlow Port entity specified in the request body must contain the OpenFlow Switch ID and the port number.
 
 ### Request
 
-*POST /vifinfos*
+***POST /vifinfos***
 
-Body: { "vifinfo": { "interface_id" : "<VIF ID>",
-"ofs_port": { "datapath_id": "<Switch ID>",
-"port_no": "<Port Number>",
-"vlan_id": "<VLAN ID(Option)>" } } }
+The body for this request must contain a VIFInfo object specifying a interface ID and an OpenFlow Port.
+The OpenFlow Port entity can contain the VLAN ID as well, even if it is not required.
+It is useful for isolating networks with tag VLAN, like using linux bridges and sending out packets with VLAN tag.
+If the VLAN ID is not specified, it will be 65535 meaning "Don't care".
 
 ### Response
 
@@ -98,7 +99,7 @@ Normal Response Code(s): 200-OK
 
 Error Response Code(s): 400-BadRequest
 
-Body: { "vifinfos": { "interface_id": "<VIF ID >" } }
+The body of this response contains the VIFInfo that only contains VIF ID.
 
 ### Example
 
@@ -171,10 +172,7 @@ Normal Response Code(s): 200-OK
 
 Error Response Code(s): 404-NotFound
 
-Body: { "vifinfo": { "interface_id" : "<VIF ID>",
-"ofs_port": { "datapath_id": "<Switch ID>",
-"port_no": "<Port Number>",
-"vlan_id": "<VLAN ID>" } } }
+The body for this response is same as the request body of *Register VIFInfo*.
 
 ### Example
 
@@ -207,10 +205,7 @@ This operation updates VIFInfo.
 
 *PUT /vifinfos/{VIF ID}*
 
-Body: { "vifinfo": { "interface_id" : "<VIF ID>",
-"ofs_port": { "datapath_id": "<Switch ID>",
-"port_no": "<Port Number>",
-"vlan_id": "<VLAN ID(Option)>" } } }
+The body for this request is same as the request body of *Register VIFInfo*.
 
 ### Response
 
