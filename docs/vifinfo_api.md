@@ -7,7 +7,7 @@ Introduction
 
 VIFInfo is a mapping of Virtual Interface (VIF) to the port on the OpenFlow network.
 VIFInfo is needed by this plugin to configure OpenFlow Controller
-to specify the binding of the port and the slice(Virtual Network).
+to specify the binding of port and slice(Virtual Network).
 Who plugs a VIF to an edge OpenFlow Switch (e.g. VIFDriver at nova-compute),
 would create a logical port on Quantum and attach the VIF to the port,
 and have to specify where the VIF is plugged on the OpneFlow Network
@@ -19,10 +19,9 @@ VIFInfo API is implemented as Quantum Extension API.
 Concepts
 --------
 
-### VIFInfo
-
-VIF is mapped to one OpenFlow port specified with
-an OpenFlow Swtich ID and a port number.
+VIFInfo is a mapping of VIF to an OpenFlow port
+ specified with an OpenFlow Swtich ID and a port number.
+VIFinfo identified with VIF ID.
 
 
 Operation List
@@ -45,7 +44,7 @@ This operation lists VIFInfo IDs.
 
 ### Request
 
-***GET /vifinfos***
+*GET /vifinfos*
 
 This operation does not require a request body.
 
@@ -82,15 +81,18 @@ Register VIFInfo
 ----------------
 
 This operation registers VIFInfo to this plugin.
-The OpenFlow Port entity specified in the request body must contain the OpenFlow Switch ID and the port number.
 
 ### Request
 
-***POST /vifinfos***
+*POST /vifinfos*
 
-The body for this request must contain a VIFInfo object specifying a interface ID and an OpenFlow Port.
-The OpenFlow Port entity can contain the VLAN ID as well, even if it is not required.
-It is useful for isolating networks with tag VLAN, like using linux bridges and sending out packets with VLAN tag.
+The body for this request must contain a VIFInfo object specifying
+ a interface ID and an OpenFlow Port.
+The OpenFlow Port entity must contain the OpenFlow Switch ID and the port number.
+The OpenFlow Port entity can contain the VLAN ID as well,
+ even if it is not required.
+It is useful for isolating networks with tag VLAN,
+ like using linux bridges and sending out packets with VLAN tag.
 If the VLAN ID is not specified, it will be 65535 meaning "Don't care".
 
 ### Response
@@ -172,7 +174,7 @@ Normal Response Code(s): 200-OK
 
 Error Response Code(s): 404-NotFound
 
-The body for this response is same as the request body of *Register VIFInfo*.
+The body for this response is the same as the body of *Register VIFInfo* request.
 
 ### Example
 
@@ -205,7 +207,7 @@ This operation updates VIFInfo.
 
 *PUT /vifinfos/{VIF ID}*
 
-The body for this request is same as the request body of *Register VIFInfo*.
+The body for this request is the same as the body of *Register VIFInfo* request.
 
 ### Response
 
