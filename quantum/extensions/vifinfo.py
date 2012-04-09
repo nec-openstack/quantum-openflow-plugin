@@ -62,12 +62,13 @@ class VifinfoController(common.QuantumController):
         params['datapath_id'] = ofs_port.get('datapath_id', None)
         if not params['datapath_id']:
             raise exc.HTTPBadRequest("No datapath_id.")
-        params['port_no'] = ofs_port.get('port_no', None)
-        if not params['port_no']:
+        port_no = ofs_port.get('port_no', None)
+        if not port_no:
             raise exc.HTTPBadRequest("No port_no.")
+        params['port_no'] = int(port_no)
         vlan_id = ofs_port.get('vlan_id', None)
         if vlan_id:
-            params['vlan_id'] = vlan_id
+            params['vlan_id'] = int(vlan_id)
         else:
             params['vlan_id'] = 65535
         return params
