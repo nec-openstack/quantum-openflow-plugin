@@ -19,7 +19,7 @@ class VIFINFOClient(object):
             self.LOG = \
               logging.getLogger("nova.virt.libvirt.nec.vifinfo_client")
         self.server = "%s:%s" % (host, port)
-        self.LOG.debug("quantum server: self.server")
+        self.LOG.debug("quantum server: %s" % self.server)
 
     def vifinfo_request(self, method, path, body=None):
         self.LOG.debug("vifinfo_request() called:%s %s %s" %
