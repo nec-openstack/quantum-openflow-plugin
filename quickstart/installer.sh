@@ -3,37 +3,25 @@
 # All Rights Reserved.
 #
 
-INSTALLER_DIR=$(cd $(dirname "$0") && pwd)
-NEC_PLUGIN_DIR=${INSTALLER_DIR%/quickstart}
-QUANTUM_DIR=$NEC_PLUGIN_DIR/quantum
-TREMA_DIR=$NEC_PLUGIN_DIR/trema
+CDIR=$(cd $(dirname "$0") && pwd)
+DEVSTACK_REPO=http://github.com/openstack-dev/devstack.git
+DEVSTACK_DIR=devstack
+DEVSTACK_BRANCH=6bedba790250b9b67776645c690d29d58d94ceac
 
-source "$INSTALLER_DIR/scripts/functions.sh"
-source "$INSTALLER_DIR/installerrc"
 
-check_distrib
-check_config
+$CDIR/scripts/config-cgroup-device-acl.sh
 
-. $INSTALLER_DIR/scripts/1-install-nova
-set_nova_conf
-set_nec_plugin_nova_code
-apply_nova_patch
-init_nova_db
-restart_nova_services
+SLICEABLE_PATCH="$CDIR/patches/0001-fixed-create_filter-in-config.cgi.patch" \
+    $CDIR/scripts/install-trema-sliceable-switch.sh
 
-. $INSTALLER_DIR/scripts/2-install-trema-srs
-. $INSTALLER_DIR/scripts/3-install-ovs
-. $INSTALLER_DIR/scripts/4-install-quantum
+$CDIR/scripts/install-ovs-as-ofs.sh
 
-if [ -n "$IMAGE_TAR" -o -n "$IMAGE_URL" ]
-then
-	. $INSTALLER_DIR/scripts/5-register-image
-fi
-if [ -n "$USER" -a -n "$PROJECT" ]
-then
-	CREDS_DIR=$INSTALLER_DIR/creds
-	. $INSTALLER_DIR/scripts/6-create-project
-    modify_create_network_sh
-fi
-
-echo "Done."
+[ -f /usr/bin/git ] || sudo apt-get -y install git
+git clone $DEVSTACK_REPO $DEVSTACK_DIR
+pushd $DEVSTACK_DIR
+git checkout $DEVSTACK_BRANCH
+git am $CDIR/patches/0001-support-Quantum-NEC-OpenFlow-Plugin.patch
+git am $CDIR/patches/0002-support-http_proxy.patch
+cp $CDIR/localrc .
+./stack.sh
+popd

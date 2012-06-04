@@ -5,9 +5,10 @@
 
 from webob import exc
 
+from quantum import wsgi
 from quantum.api import api_common as common
 from quantum.common import exceptions as qexception
-from quantum.common import extensions
+from quantum.extensions import extensions
 from quantum.manager import QuantumManager
 
 
@@ -16,27 +17,34 @@ class Vifinfo(object):
     def __init__(self):
         pass
 
-    def get_name(self):
+    @classmethod
+    def get_name(cls):
         return "vifinfos"
 
-    def get_alias(self):
+    @classmethod
+    def get_alias(cls):
         return "VIFINFOS"
 
-    def get_description(self):
+    @classmethod
+    def get_description(cls):
         return "The Virtual Interface - OpenFlow Port Mapping API Extension."
 
-    def get_namespace(self):
-        return "http://www.nec.co.jp/api/ext/vifinfo/v1.0"
+    @classmethod
+    def get_namespace(cls):
+        return "http://www.nec.co.jp/api/ext/vifinfo/v1.1"
 
-    def get_updated(self):
-        return "2011-01-22T21:53:00+09:00"
+    @classmethod
+    def get_updated(cls):
+        return "2011-04-05T13:34:20+09:00"
 
-    def get_resources(self):
-        controller = VifinfoController(QuantumManager.get_plugin())
-        return [extensions.ResourceExtension('vifinfos', controller)]
+    @classmethod
+    def get_resources(cls):
+        controller = VifinfosController(QuantumManager.get_plugin())
+        return [extensions.ResourceExtension('extensions/nec/vifinfos',
+                                             controller)]
 
 
-class VifinfoController(common.QuantumController):
+class VifinfosController(common.QuantumController, wsgi.Controller):
     """
     Ofport API controller maps/unmaps Interfaces to OpenFlow Ports.
     """
@@ -60,17 +68,17 @@ class VifinfoController(common.QuantumController):
         if not ofs_port:
             raise exc.HTTPBadRequest("No ofs_port.")
         params['datapath_id'] = ofs_port.get('datapath_id', None)
-        if not params['datapath_id']:
-            raise exc.HTTPBadRequest("No datapath_id.")
-        port_no = ofs_port.get('port_no', None)
-        if not port_no:
-            raise exc.HTTPBadRequest("No port_no.")
-        params['port_no'] = int(port_no)
+        #if not params['datapath_id']:
+        #    raise exc.HTTPBadRequest("No datapath_id.")
+        params['port_no'] = ofs_port.get('port_no', None)
+        #if not params['port_no']:
+        #    raise exc.HTTPBadRequest("No port_no.")
         vlan_id = ofs_port.get('vlan_id', None)
         if vlan_id:
-            params['vlan_id'] = int(vlan_id)
+            params['vlan_id'] = vlan_id
         else:
             params['vlan_id'] = 65535
+        params['mac'] = ofs_port.get('mac', None)
         return params
 
     def index(self, request):
@@ -87,19 +95,24 @@ class VifinfoController(common.QuantumController):
         self.plugin.add_vifinfo(params['interface_id'],
                                 params['datapath_id'],
                                 params['port_no'],
-                                params['vlan_id'])
+                                params['vlan_id'],
+                                params['mac'])
         return {'vifinfo': {'interface_id': params['interface_id']}}
+
+    def _is_same_vifinfo(self, vifinfo, params):
+        for key in ['datapath_id', 'port_no', 'vlan_id', 'mac']:
+            if ofs_port.get(key, None) != params[key]:
+                return False
+        return True
 
     def update(self, request, id):
         vifinfo = self.plugin.get_vifinfo(id)
-        if not vifinfo:
-            raise exc.HTTPNotFound()
         params = self._parse_request_params(request)
-        self.plugin.delete_vifinfo(id)
-        self.plugin.add_vifinfo(params['interface_id'],
-                                params['datapath_id'],
-                                params['port_no'],
-                                params['vlan_id'])
+        self.plugin.update_vifinfo(params['interface_id'],
+                                   params['datapath_id'],
+                                   params['port_no'],
+                                   params['vlan_id'],
+                                   params['mac'])
         return exc.HTTPNoContent()
 
     def delete(self, request, id):

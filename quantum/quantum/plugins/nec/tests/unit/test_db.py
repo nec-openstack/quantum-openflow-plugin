@@ -9,7 +9,7 @@ import quantum.plugins.nec.db.nec_db as ndb
 import quantum.plugins.nec.db.nec_models as nmodels
 import quantum.plugins.nec.db.quantum_db_extension as dbe
 
-LOG = logging.getLogger('nec_plugin.test_db')
+LOG = logging.getLogger(__name__)
 
 
 class QuantumDBExtensionTest(unittest.TestCase):
