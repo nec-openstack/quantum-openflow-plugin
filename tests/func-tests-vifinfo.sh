@@ -1,60 +1,21 @@
 #!/bin/bash -ex
 
-dir="${0%/*}"
-cli="../nova/vifinfo_cli.py -v --logfile=$dir/vifinfo_cli.log"
-vif_id="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
-vif_dpid="0x00000a001"
-vif_port=1
-vif_dpid_n="0x00000a002"
-vif_port_n=2
-
-if [ -n "$1" ]
-then
-	vif_id="$1"
-fi
+TOP_DIR=$(cd $(dirname "$0") && pwd)
+source $TOP_DIR/functions
 
 
-echo "# create vifinfo #"
-
-$cli list_vifinfos > ret
-grep "^Interface ID: $vif_id" ret && exit 1 || echo "ok"
-
-$cli create_vifinfo $vif_id $vif_dpid $vif_port > ret
-grep "^Interface ID: $vif_id" ret
-
-$cli list_vifinfos > ret
-grep "^Interface ID: $vif_id" ret
-
-$cli show_vifinfo $vif_id > ret
-grep "^Interface ID: $vif_id" ret
-grep "Datapath ID: $vif_dpid" ret
-grep "OFPort No: *$vif_port" ret
+vif_id="cbebaf45-5d9c-43ab-bb4a-75b85c8ca001"
+dpid="0x00000a001"
+port_no=1
+dpidn="0x00000a002"
+port_non=2
 
 
-echo "# modify vifinfo #"
+create_vifinfo $vif_id $dpid $port_no
+update_vifinfo $vif_id $dpidn $port_non
 
-$cli update_vifinfo $vif_id $vif_dpid_n $vif_port_n > ret
+stopstop
 
-$cli show_vifinfo $vif_id > ret
-grep "^Interface ID: $vif_id" ret
-grep "Datapath ID: $vif_dpid_n" ret
-grep "OFPort No: *$vif_port_n" ret
+delete_vifinfo $vif_id
 
-
-echo "# created, press ENTER to continue ... #"
-read hoge
-
-
-echo "# delete vifinfo #"
-
-$cli list_vifinfos > ret
-grep "^Interface ID: $vif_id" ret
-
-$cli delete_vifinfo $vif_id > ret
-
-$cli list_vifinfos > ret
-grep "^Interface ID: $vif_id" ret && exit 1 || echo "ok"
-
-
-rm -f ret
-echo "# OK #"
+ok_farm
