@@ -17,6 +17,12 @@ libglib2.0-0"
 sudo apt-get -y install $pkgs
 git clone https://github.com/trema/trema.git $TREMA_DIR/trema
 git clone https://github.com/trema/apps.git $TREMA_DIR/apps
+pushd $TREMA_DIR/trema
+	git checkout 10b99cd88dc09532b6db37ac1625afcbfe1e3e92
+popd
+pushd $TREMA_DIR/apps
+	git checkout c9b7e1da30e8096a86a562573c8aa17e39cb7ece
+popd
 
 # build
 pushd $TREMA_DIR/trema
