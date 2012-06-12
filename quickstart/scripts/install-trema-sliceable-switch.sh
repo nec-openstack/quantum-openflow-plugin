@@ -8,7 +8,11 @@ TREMA_DIR=${TREMA_DIR:-$DEST/trema}
 TREMA_TMP_DIR=${TREMA_TMP_DIR:-/tmp/trema}
 SLICE_DIR="$TREMA_DIR/apps/sliceable_switch"
 VAR_DIR="$TREMA_DIR/var"
-
+TREMA_REPO=https://github.com/trema/trema.git
+TREMA_APPS_REPO=https://github.com/trema/apps.git
+TREMA_BRANCH=develop
+#TREMA_APPS_BRANCH=master
+TREMA_APPS_BRANCH=1377c14cdf68888bae28d1065baa80cf7913b829
 
 pkgs="gcc make ruby ruby-dev irb file libjson-perl libpcap-dev sqlite3 \
 libsqlite3-dev apache2-mpm-prefork libdbi-perl libdbd-sqlite3-perl \
@@ -23,15 +27,18 @@ fi
 # build
 sliceable=$TREMA_DIR/apps/sliceable_switch/sliceable_switch
 if [ ! -e $sliceable ] || [[ "$RECLONE" == "yes" ]]; then
-    git clone https://github.com/trema/trema.git $TREMA_DIR/trema -b develop
-    git clone https://github.com/trema/apps.git $TREMA_DIR/apps -b master
-
-    #FIXME
-    if [ -f "$SLICEABLE_PATCH" ]; then
-        pushd $TREMA_DIR/apps
-            git am $SLICEABLE_PATCH
-        popd
-    fi
+    git clone https://github.com/trema/trema.git $TREMA_DIR/trema
+    git clone https://github.com/trema/apps.git $TREMA_DIR/apps
+    pushd $TREMA_DIR/trema
+		git checkout $TREMA_BRANCH
+	popd
+    pushd $TREMA_DIR/apps
+        git checkout $TREMA_APPS_BRANCH
+        #FIXME
+        if [ -f "$SLICEABLE_PATCH" ]; then
+            patch -p1 < $SLICEABLE_PATCH
+        fi
+    popd
 
     pushd $TREMA_DIR/trema
         ./build.rb
