@@ -11,7 +11,7 @@ SERVICE_TOKEN=$_PASSWD
 HOST_IP_IFACE=eth0
 HOST_IP=$(LC_ALL=C /sbin/ifconfig ${HOST_IP_IFACE} | grep -m 1 'inet addr' | cut -d: -f2 | awk '{print $1;}')
 
-ENABLED_SERVICES=g-api,g-reg,key,n-api,n-crt,n-obj,n-cpu,n-net,n-vol,n-sch,n-novnc,n-xvnc,n-cauth,horizon,mysql,rabbit,quantum,q-svc,q-agt
+ENABLED_SERVICES=g-api,g-reg,key,n-api,n-crt,n-obj,n-cpu,n-net,n-vol,n-sch,n-novnc,n-xvnc,n-cauth,horizon,mysql,rabbit,q-svc,q-agt
 EXTRA_OPTS=(
     libvirt_vif_type=ethernet
     libvirt_vif_driver="quantum.plugins.nec.nova.libvirt_vif.LibvirtOVSVIFINFODriver"
@@ -26,4 +26,3 @@ NEC_PLUGIN_REPO=http://github.com/nec-openstack/quantum-openflow-plugin.git
 NEC_PLUGIN_BRANCH=essex-proto
 
 IMAGE_URLS+=",http://www.openvswitch.org/tty-quantum.tgz"
-DEFAULT_IMAGE_NAME=tty-quantum
