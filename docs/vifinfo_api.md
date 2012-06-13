@@ -10,7 +10,7 @@ VIFInfo is needed by this plugin to configure OpenFlow Controller
 to specify the binding of port and slice(Virtual Network).
 Who plugs a VIF to an edge OpenFlow Switch (e.g. VIFDriver at nova-compute),
 would create a logical port on Quantum and attach the VIF to the port,
-and have to specify where the VIF is plugged on the OpneFlow Network
+and have to specify where the VIF is plugged on the OpenFlow Network
 through this VIFInfo API.
 
 VIFInfo API is implemented as Quantum Extension API.
@@ -20,8 +20,8 @@ Concepts
 --------
 
 VIFInfo is a mapping of VIF to an OpenFlow port
- specified with an OpenFlow Swtich ID and a port number.
-VIFinfo identified with VIF ID.
+ specified with an OpenFlow Switch ID and a port number.
+VIFInfo identified with VIF ID.
 
 
 Operation List
@@ -87,7 +87,7 @@ This operation registers VIFInfo to this plugin.
 *POST /vifinfos*
 
 The body for this request must contain a VIFInfo object specifying
- a interface ID and an OpenFlow Port.
+an interface ID and an OpenFlow Port.
 The OpenFlow Port entity must contain the OpenFlow Switch ID and the port number.
 The OpenFlow Port entity can contain the VLAN ID as well,
  even if it is not required.

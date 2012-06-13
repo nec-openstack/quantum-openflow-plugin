@@ -19,7 +19,7 @@ The NEC VIF Driver, to collaborate with OpenStack Nova, informs the OFC
 of a VIF - OpenFlow Port mapping via Quantum NEC Extension API (vifinfo),
 so that the OFC is automatically configured right after VM deployed.
 
-Currently, this plugin co-works with Diablo version of OpenStack Nova
+Currently, this plugin co-works with Essex version of OpenStack Nova
 and Quantum.
 
 
@@ -37,8 +37,8 @@ Related Projects
 Requirements
 ------------
 
-* Diablo/Essex version of OpenStack Nova and Quantum
-* OpenFlow Controller: Trema with Trema App - Sliceable Switch,
+* Essex version of OpenStack Nova and Quantum
+* OpenFlow Controller: Trema with Sliceable Switch,
   ProgrammableFlow Controller with REST API, or an OFC that
   has the same functionalities and REST API as Sliceable Switch has.
   For details see the implementation of Sliceable Switch
