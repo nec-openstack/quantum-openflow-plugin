@@ -23,6 +23,6 @@ Q_HOST=$HOST_IP
 
 NEC_PLUGIN_DIR=$DEST/quantum-openflow-plugin
 NEC_PLUGIN_REPO=http://github.com/nec-openstack/quantum-openflow-plugin.git
-NEC_PLUGIN_BRANCH=essex-proto
+NEC_PLUGIN_BRANCH=master
 
 IMAGE_URLS+=",http://www.openvswitch.org/tty-quantum.tgz"
