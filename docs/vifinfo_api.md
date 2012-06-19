@@ -116,7 +116,7 @@ Request:
                     "ofs_port":
                         {
                             "datapath_id": "0x001A",
-                            "port_no": "2"
+                            "port_no": 2
                         }
                 }
         }
@@ -191,8 +191,8 @@ Response:
                     "ofs_port":
                         {
                             "datapath_id": "0x001A",
-                            "port_no": "2"
-                            "vlan_id": "65535"
+                            "port_no": 2,
+                            "vlan_id": 65535
                         }
                 }
         }
@@ -230,8 +230,8 @@ Request:
                     "ofs_port":
                         {
                             "datapath_id": "0x001A",
-                            "port_no": "2",
-                            "vlan_id": "100"
+                            "port_no": 2,
+                            "vlan_id": 100
                         }
                 }
         }
