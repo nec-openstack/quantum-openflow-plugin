@@ -57,7 +57,7 @@ class PFCDriver(object):
         body = {'datapath_id': vifinfo.datapath_id,
                 'port': str(vifinfo.port_no),
                 'vid': str(vifinfo.vlan_id)}
-        res = self.client.post(ports_path, body=body)
+        res = self.client.post(path, body=body)
         ofn_port_id = res['id']
         return ofn_port_id
 
