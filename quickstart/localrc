@@ -20,6 +20,7 @@ EXTRA_OPTS=(
 )
 Q_PLUGIN="nec"
 Q_HOST=$HOST_IP
+#OVS_INTERFACE=eth1
 
 NEC_PLUGIN_DIR=$DEST/quantum-openflow-plugin
 NEC_PLUGIN_REPO=http://github.com/nec-openstack/quantum-openflow-plugin.git
