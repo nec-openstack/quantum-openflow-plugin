@@ -23,6 +23,7 @@ pushd $DEVSTACK_DIR
 git checkout $DEVSTACK_BRANCH
 git am $CDIR/patches/devstack/0001-support-Quantum-NEC-OpenFlow-Plugin.patch
 git am $CDIR/patches/devstack/0002-support-http_proxy.patch
+git am $CDIR/patches/devstack/0003-Multi-node-support-with-Quantum.patch
 cp $LOCALRC .
 ./stack.sh
 popd
