@@ -8,10 +8,7 @@ RABBIT_PASSWORD=$_PASSWD
 SERVICE_PASSWORD=$_PASSWD
 SERVICE_TOKEN=$_PASSWD
 
-HOST_IP_IFACE=eth0
-HOST_IP=$(LC_ALL=C /sbin/ifconfig ${HOST_IP_IFACE} | grep -m 1 'inet addr' | cut -d: -f2 | awk '{print $1;}')
-
-ENABLED_SERVICES=g-api,g-reg,key,n-api,n-crt,n-obj,n-cpu,n-net,n-vol,n-sch,n-novnc,n-xvnc,n-cauth,horizon,mysql,rabbit,q-svc,q-agt
+ENABLED_SERVICES=n-cpu,quantum
 EXTRA_OPTS=(
     libvirt_vif_type=ethernet
     libvirt_vif_driver="quantum.plugins.nec.nova.libvirt_vif.LibvirtOVSVIFINFODriver"
@@ -19,11 +16,17 @@ EXTRA_OPTS=(
     quantum_use_dhcp=True
 )
 Q_PLUGIN="nec"
-Q_HOST=$HOST_IP
-#OVS_INTERFACE=eth1
+
+CC_HOST=192.168.122.101
+
+MYSQL_HOST=${CC_HOST}
+RABBIT_HOST=${CC_HOST}
+GLANCE_HOSTPORT=${CC_HOST}:9292
+Q_HOST=${CC_HOST}
+
+OFC_HOST=${CC_HOST}
+OVS_INTERFACE=eth1
 
 NEC_PLUGIN_DIR=$DEST/quantum-openflow-plugin
 NEC_PLUGIN_REPO=http://github.com/nec-openstack/quantum-openflow-plugin.git
 NEC_PLUGIN_BRANCH=master
-
-IMAGE_URLS+=",http://www.openvswitch.org/tty-quantum.tgz"

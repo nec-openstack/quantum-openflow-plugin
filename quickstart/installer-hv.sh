@@ -7,13 +7,12 @@ CDIR=$(cd $(dirname "$0") && pwd)
 DEVSTACK_REPO=http://github.com/openstack-dev/devstack.git
 DEVSTACK_DIR=devstack
 DEVSTACK_BRANCH=6bedba790250b9b67776645c690d29d58d94ceac
-
-LOCALRC=$CDIR/localrc
+LOCALRC=$CDIR/localrc-hv
 
 $CDIR/scripts/config-cgroup-device-acl.sh
 
-SLICEABLE_PATCH="$CDIR/patches/trema/0001-fixed-create_filter-in-config.cgi.patch" \
-    $CDIR/scripts/install-trema-sliceable-switch.sh
+#SLICEABLE_PATCH="$CDIR/patches/trema/0001-fixed-create_filter-in-config.cgi.patch" \
+#    $CDIR/scripts/install-trema-sliceable-switch.sh
 
 LOCALRC=$LOCALRC $CDIR/scripts/install-ovs-as-ofs.sh
 
@@ -24,6 +23,6 @@ git checkout $DEVSTACK_BRANCH
 git am $CDIR/patches/devstack/0001-support-Quantum-NEC-OpenFlow-Plugin.patch
 git am $CDIR/patches/devstack/0002-support-http_proxy.patch
 git am $CDIR/patches/devstack/0003-Multi-node-support-with-Quantum.patch
-cp $LOCALRC .
+cp $LOCALRC ./localrc
 ./stack.sh
 popd
