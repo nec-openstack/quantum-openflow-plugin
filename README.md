@@ -71,7 +71,7 @@ installer.
 See [Quick Start Installer][quick-start] for more information.
 [quick-start]: https://github.com/nec-openstack/quantum-openflow-plugin/blob/master/quickstart/README.md
 
-With Quick Start Installer, you can build an OpenStack+OpenFlow environment
+With Quick Start Installer, you can build an OpenStack+OpenFlow All-in-One environment
 as follows:
 
         $ git clone https://github.com/nec-openstack/quantum-openflow-plugin.git

@@ -32,8 +32,25 @@ Target Softwares
 * Open vSwitch (deb package)
 
 
-Configurations
---------------
+Installation Modes
+------------------
+
+This installer supports following modes:
+
+* **All-In-One** : Run OpenStack+OpenFlow on a single machine. See below.
+* **Multi-Node** : Setup a multi-node cluster which consists of
+  one cloud controller and several compute nodes.
+  See [README-multinode.md][quickstart-multi] for details.
+
+All-In-One (Single node)
+-------------------------
+
+The instruction below describes how to install OpenStack with NEC OpenFlow plugin
+for a single machine. If you would like to install OpenStack with multiple physical
+machines, see [README-multinode.md][quickstart-multi].
+
+
+### Configurations
 
 Configure `quickstart/localrc'.  Set the following parameters:
 
@@ -42,11 +59,9 @@ Configure `quickstart/localrc'.  Set the following parameters:
 * _PASSWD: Password for all components
 
 See [Devstack][devstack] for more information.
-[devstack]: http://devstack.org/
 
 
-Run Installer
--------------
+### Run Installer
 
 Run `installer.sh', and wait...
 
@@ -59,20 +74,23 @@ The log files can be found at:
 * Trema:   /tmp/trema/log/
 
 
-Test VM Launch
---------------
+### Test VM Launch
 
-1. Load novarc.
+1. Load nova related environment variables.
 
         $ source quickstart/devstack/openrc
 
 2. Launch VM.
    e.g.:
 
-        $ nova boot --image 3 --flavor 1 servera
+        $ nova boot --image 450b13ca-c9d1-4990-a736-55e761c6c505 --flavor 1 servera
 
 3. Check Status
 
         $ nova list
 
 4. Ping, SSH, etc...  Enjoy!
+
+[devstack]: http://devstack.org/
+[quickstart-single]: https://github.com/nec-openstack/quantum-openflow-plugin/blob/master/quickstart/README.md
+[quickstart-multi]: https://github.com/nec-openstack/quantum-openflow-plugin/blob/master/quickstart/README-multinode.md
