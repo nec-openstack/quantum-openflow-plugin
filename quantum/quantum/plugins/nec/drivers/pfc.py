@@ -27,7 +27,7 @@ class PFCDriver(object):
         return False
 
     def create_tenant(self, tenant_id):
-        body = {'description': tenant_id}
+        body = {'id': tenant_id}
         res = self.client.post(tenants_path, body=body)
         ofn_tenant_id = res['id']
         return ofn_tenant_id
