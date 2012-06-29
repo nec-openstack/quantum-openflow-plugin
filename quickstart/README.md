@@ -28,7 +28,7 @@ Target Softwares
 
 * Nova (deb packages, current version 2011.3)
 * Quantum (version 2011.3) with this plugin
-* Trema and Trema App - Sliceable Routing Switch
+* Trema and Trema App - Sliceable Switch
 * Open vSwitch (deb package)
 
 

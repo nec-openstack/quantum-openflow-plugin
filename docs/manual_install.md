@@ -65,7 +65,7 @@ Check the following links:
 
 * Trema: http://trema.github.com/trema/
 * Slicesable Routing Switch:
-  https://github.com/trema/apps/tree/master/sliceable_routing_switch
+  https://github.com/trema/apps/tree/master/sliceable_switch
 
 Then build Trema, "topology" and "Slicesable Routing Switch".
 
