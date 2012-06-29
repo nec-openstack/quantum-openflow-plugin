@@ -64,14 +64,14 @@ Installations
 -------------
 
 See [Manual Installation Guide][manual-install].
-[manual-install]:https://github.com/nec-openstack/quantum-openflow-plugin/blob/master/docs/manual_install.md
+[manual-install]:https://github.com/nec-openstack/quantum-openflow-plugin/blob/stable/diablo-filter/docs/manual_install.md
 
 We also provide a quick-start installer which installs and configures Nova,
 Quantum and Trema on one machine.  If you are not familiar with Nova or Trema,
 please try the quick-start installer or refer to the scripts in the quick-start
 installer.
 See [Quick Start Installer][quick-start] for more information.
-[quick-start]: https://github.com/nec-openstack/quantum-openflow-plugin/blob/master/quickstart/README.md
+[quick-start]: https://github.com/nec-openstack/quantum-openflow-plugin/blob/stable/diablo-filter/quickstart/README.md
 
 With Quick Start Installer, you can build an OpenStack+OpenFlow environment
 and launch VM as follows:
