@@ -55,7 +55,7 @@ class NECPlugin(QuantumPluginBase):
         num_of_networks = len(db.network_list(tenant_id))
         if num_of_networks == 0:
             ofn_tenant = ndb.get_ofn_tenant(tenant_id)
-            if ofn_tenant and self.conf.auto_id_tenant:
+            if ofn_tenant:
                 self.driver.delete_tenant(ofn_tenant.ofn_tenant_id)
                 ndb.del_ofn_tenant(tenant_id)
 
