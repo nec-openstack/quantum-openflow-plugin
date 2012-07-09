@@ -30,8 +30,8 @@ if [ ! -e $sliceable ] || [[ "$RECLONE" == "yes" ]]; then
     git clone https://github.com/trema/trema.git $TREMA_DIR/trema
     git clone https://github.com/trema/apps.git $TREMA_DIR/apps
     pushd $TREMA_DIR/trema
-		git checkout $TREMA_BRANCH
-	popd
+        git checkout $TREMA_BRANCH
+    popd
     pushd $TREMA_DIR/apps
         git checkout $TREMA_APPS_BRANCH
         #FIXME
@@ -109,13 +109,13 @@ sudo a2ensite sliceable_switch
 
 # deploy files
 pushd $SLICE_DIR
-	rm -f filter.db  slice.db
-	./create_tables.sh
-	mv filter.db  slice.db $VAR_DIR/db/
-	cp Slice.pm Filter.pm config.cgi $VAR_DIR/script/
+    rm -f filter.db  slice.db
+    ./create_tables.sh
+    mv filter.db  slice.db $VAR_DIR/db/
+    cp Slice.pm Filter.pm config.cgi $VAR_DIR/script/
 popd
 sed -i -e "s|/home/sliceable_switch/db|$VAR_DIR/db|" \
-	$VAR_DIR/script/config.cgi
+    $VAR_DIR/script/config.cgi
 cp $SLICE_DIR/sliceable_switch_null.conf $VAR_DIR/sliceable.conf
 sed -i -e "s|../apps/sliceable_switch/slice.db|$VAR_DIR/db/slice.db|" \
        -e "s|../apps/sliceable_switch/filter.db|$VAR_DIR/db/filter.db|" \
