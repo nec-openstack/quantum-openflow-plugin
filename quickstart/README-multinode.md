@@ -32,7 +32,7 @@ See [Devstack][devstack] for more information.
 
 Run the install script and wait...
 
-        $ ./installer.sh
+        $ ./installer.sh cc
 
 After installation has finished, check console output and log files.
 The log files can be found at:
@@ -65,7 +65,7 @@ See [Devstack][devstack] for more information.
 
 Run the install script and wait...
 
-        $ ./installer-hv.sh
+        $ ./installer.sh hv
 
 After installation has finished, check console output and log files.
 The log files can be found at:
