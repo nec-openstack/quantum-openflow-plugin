@@ -26,6 +26,7 @@ Q_HOST=${CC_HOST}
 
 OFC_HOST=${CC_HOST}
 OVS_INTERFACE=eth1
+#GRE_REMOTE_IPS=192.168.122.101
 
 NEC_PLUGIN_DIR=$DEST/quantum-openflow-plugin
 NEC_PLUGIN_REPO=http://github.com/nec-openstack/quantum-openflow-plugin.git

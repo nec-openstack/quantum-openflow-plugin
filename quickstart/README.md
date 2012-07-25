@@ -10,7 +10,7 @@ this Plugin in one machine.  This installer installs and configures all
 services that the Quantum NEC OpenFlow Plugin needs.
 You can get a trial environment by one command!
 
-Note: From the Essex version of this installer use devstack.
+Note: From the Essex version of this installer use [Devstack][devstack].
 
 
 Restrictions
@@ -43,7 +43,7 @@ This installer supports following modes:
   See [README-multinode.md][quickstart-multi] for details.
 
 All-In-One (Single node)
--------------------------
+------------------------
 
 The instruction below describes how to install OpenStack with NEC OpenFlow plugin
 for a single machine. If you would like to install OpenStack with multiple physical
@@ -74,7 +74,8 @@ The log files can be found at:
 * Trema:   /tmp/trema/log/
 
 
-### Test VM Launch
+Test VM Launch
+--------------
 
 1. Load nova related environment variables.
 

@@ -5,15 +5,19 @@ Here is how to install OpenStack with NEC OpenFlow plugin into multiple physical
 
 
 Prerequisites
---------------------
+-------------
 
 See [README.md][quickstart-single] about the prerequisites and restrictions.
 
+* Control Plane Network
+* User Plane Network: Open vSwitch and/or physical switch supported by the OFC.
+  You have to create a Network by connecting each OpenFlow switch including
+  Open vSwitch on hypervisor node(s) with an exclusive line or GRE tunneling.
 
-Configure Cluster Controller
-------------------------------
+Cluster Controller Node
+-----------------------
 
-## Configurations
+### Configurations
 
 Configure `quickstart/localrc'.  Set the following parameters:
 
@@ -25,10 +29,14 @@ Configure `quickstart/localrc'.  Set the following parameters:
   The interface specified in OVS_INTERFACE will be attached to an Open vSwitch bridge
   (named as OVS_BRIDGE) during the installation. When you use tunneling like GRE
   to connect to other nodes, comment out this line (or set an empty value).
+* **GRE_REMOTE_IPS**: Remote IP adresses joined with colon
+  (e.g., 192.168.122.102:192.168.122.103).
+  GRE tunnels from an Open vSwitch bridge (named as OVS_BRIDGE) to
+  the specified remote IP addresses will be configured during the installation.
 
 See [Devstack][devstack] for more information.
 
-## Run Installer
+### Run Installer
 
 Run the install script and wait...
 
@@ -41,12 +49,12 @@ The log files can be found at:
 * Trema:   /tmp/trema/log/
 
 
-Configure Compute Nodes
-------------------------------
+Compute Node(s)
+---------------
 
 On a compute node, only nova-compute will be setup.
 
-## Configurations
+### Configurations
 
 Configure `quickstart/localrc-hv'. (Note that the name of the configuration
 file ends with `-hv'.) Set the following parameters:
@@ -58,10 +66,14 @@ file ends with `-hv'.) Set the following parameters:
   The interface specified in OVS_INTERFACE will be attached to an Open vSwitch bridge
   (named as OVS_BRIDGE) during the installation. When you use tunneling like GRE
   to connect to other nodes, comment out this line (or set an empty value).
+* **GRE_REMOTE_IPS**: Remote IP adresses joined with colon
+  (e.g., 192.168.122.102:192.168.122.103).
+  GRE tunnels from an Open vSwitch bridge (named as OVS_BRIDGE) to
+  the specified remote IP addresses will be configured during the installation.
 
 See [Devstack][devstack] for more information.
 
-## Run Installer
+### Run Installer
 
 Run the install script and wait...
 
@@ -74,7 +86,7 @@ The log files can be found at:
 
 
 Test VM Launch
---------------------
+--------------
 
 Typically you will run the following commands on the cluster controller.
 
