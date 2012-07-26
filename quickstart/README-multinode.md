@@ -89,22 +89,8 @@ The log files can be found at:
 Test VM Launch
 --------------
 
-Typically you will run the following commands on the cluster controller.
+See [README.md][quickstart-single].
 
-1. Load nova related environment variables.
-
-        $ source quickstart/devstack/openrc
-
-2. Launch VM.
-   e.g.:
-
-        $ nova boot --image 450b13ca-c9d1-4990-a736-55e761c6c505 --flavor 1 servera
-
-3. Check Status
-
-        $ nova list
-
-4. Ping, SSH, etc...  Enjoy!
 
 [devstack]: http://devstack.org/
 [quickstart-single]: https://github.com/nec-openstack/quantum-openflow-plugin/blob/master/quickstart/README.md

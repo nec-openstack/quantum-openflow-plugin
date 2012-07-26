@@ -84,7 +84,8 @@ Test VM Launch
 2. Launch VM.
    e.g.:
 
-        $ nova boot --image 450b13ca-c9d1-4990-a736-55e761c6c505 --flavor 1 servera
+        $ image_id=$(nova image-list | awk'/ tty-quantum /{print $2}')
+        $ nova boot --image $image_id --flavor 1 servera
 
 3. Check Status
 
