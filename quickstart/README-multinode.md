@@ -7,12 +7,13 @@ Here is how to install OpenStack with NEC OpenFlow plugin into multiple physical
 Prerequisites
 -------------
 
-See [README.md][quickstart-single] about the prerequisites and restrictions.
-
 * Control Plane Network
-* User Plane Network: Open vSwitch and/or physical switch supported by the OFC.
-  You have to create a Network by connecting each OpenFlow switch including
-  Open vSwitch on hypervisor node(s) with an exclusive line or GRE tunneling.
+* OpenFlow Network as a User Plane Network: Create OpenFlow Network by connecting all nodes
+  with OpenFlow switch(s).  If you don't have any hardware OpenFlow switch, use GRE tunnel
+  option (GRE_REMOTE_IPS) to create OpenFlow Network over Control Plane Network.
+
+See [README.md][quickstart-single] about the other prerequisites and restrictions.
+
 
 Cluster Controller Node
 -----------------------
