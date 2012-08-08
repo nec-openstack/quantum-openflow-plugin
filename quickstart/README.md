@@ -26,8 +26,8 @@ Restrictions
 Target Softwares
 ----------------
 
-* Nova (version Essex)
-* Quantum (version Essex) with this plugin
+* Nova
+* Quantum with this plugin
 * Trema and Sliceable Switch
 * Open vSwitch (deb package)
 

@@ -16,7 +16,7 @@ fi
 CDIR=$(cd $(dirname "$0") && pwd)
 DEVSTACK_REPO=http://github.com/openstack-dev/devstack.git
 DEVSTACK_DIR=devstack
-DEVSTACK_BRANCH=6bedba790250b9b67776645c690d29d58d94ceac
+DEVSTACK_BRANCH=0416f332fdbb55a2dbeb68810fa165bdb1e0f4a4
 
 if [ "$MODE" = "hv" ]; then
     LOCALRC=$CDIR/localrc-hv
@@ -24,14 +24,10 @@ else # MODE = cc
     LOCALRC=$CDIR/localrc
 fi
 
-$CDIR/scripts/config-cgroup-device-acl.sh
-
 if [ "$MODE" = "cc" ]; then
     SLICEABLE_PATCH="$CDIR/patches/trema/0001-fixed-create_filter-in-config.cgi.patch" \
 	$CDIR/scripts/install-trema-sliceable-switch.sh
 fi
-
-LOCALRC=$LOCALRC $CDIR/scripts/install-ovs-as-ofs.sh
 
 [ -f /usr/bin/git ] || sudo apt-get -y install git
 
@@ -39,12 +35,12 @@ if [ ! -e $DEVSTACK_DIR ]; then
     git clone $DEVSTACK_REPO $DEVSTACK_DIR
     pushd $DEVSTACK_DIR
     git checkout $DEVSTACK_BRANCH
-    git am $CDIR/patches/devstack/0001-support-Quantum-NEC-OpenFlow-Plugin.patch
-    git am $CDIR/patches/devstack/0002-support-http_proxy.patch
-    git am $CDIR/patches/devstack/0003-Multi-node-support-with-Quantum.patch
+    patch -p1 < $CDIR/patches/devstack/support-quantum-nec-openflow-plugin-v2.patch
+    patch -p1 < $CDIR/patches/devstack/support-quantum-nec-plugin-get-review-code.patch
+    patch -p1 < $CDIR/patches/devstack/fix-dependency.patch
     cp $LOCALRC ./localrc
     popd
 fi
 pushd $DEVSTACK_DIR
-./stack.sh
+    ./stack.sh
 popd

@@ -10,7 +10,8 @@ SLICE_DIR="$TREMA_DIR/apps/sliceable_switch"
 VAR_DIR="$TREMA_DIR/var"
 TREMA_REPO=https://github.com/trema/trema.git
 TREMA_APPS_REPO=https://github.com/trema/apps.git
-TREMA_BRANCH=develop
+#TREMA_BRANCH=develop
+TREMA_BRANCH=0.2.4
 #TREMA_APPS_BRANCH=master
 TREMA_APPS_BRANCH=1377c14cdf68888bae28d1065baa80cf7913b829
 
@@ -27,8 +28,8 @@ fi
 # build
 sliceable=$TREMA_DIR/apps/sliceable_switch/sliceable_switch
 if [ ! -e $sliceable ] || [[ "$RECLONE" == "yes" ]]; then
-    git clone https://github.com/trema/trema.git $TREMA_DIR/trema
-    git clone https://github.com/trema/apps.git $TREMA_DIR/apps
+    git clone $TREMA_REPO $TREMA_DIR/trema
+    git clone $TREMA_APPS_REPO $TREMA_DIR/apps
     pushd $TREMA_DIR/trema
         git checkout $TREMA_BRANCH
     popd

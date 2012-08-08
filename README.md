@@ -19,8 +19,11 @@ The NEC VIF Driver, to collaborate with OpenStack Nova, informs the OFC
 of a VIF - OpenFlow Port mapping via Quantum NEC Extension API (vifinfo),
 so that the OFC is automatically configured right after VM deployed.
 
-Currently, this plugin co-works with Essex version of OpenStack Nova
-and Quantum.
+NOTE: This plugin for Folsom will be merged into Quantum mainline.
+Currently, this plugin are in review at 
+https://review.openstack.org/#/c/10664/ .
+
+NOTE: This branch only provides QuickStart scripts.
 
 
 Related Projects
@@ -52,12 +55,6 @@ Directory Layout
 ----------------
 
     quantum-openflow-plugin/
-        quantum/                   ... code for Quantum server
-            etc/                   ... plugin config
-            quantum/extentions/    ... NEC Extensions
-            quantum/plugins/nec/   ... Quantum NEC OpenFlow Plugin
-                drivers/           ... Drivers for OpenFlow Controller
-                nova/              ... VIF/IF driver for Nova
         quickstart/                ... QuickStart Installer
 
 
