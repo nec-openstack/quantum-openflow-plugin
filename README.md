@@ -71,7 +71,7 @@ See [Quick Start Installer][quick-start] for more information.
 With Quick Start Installer, you can build an OpenStack+OpenFlow All-in-One environment
 as follows:
 
-        $ git clone https://github.com/nec-openstack/quantum-openflow-plugin.git
+        $ git clone https://github.com/nec-openstack/quantum-openflow-plugin.git -b folsom
         $ cd quantum-openflow-plugin/quickstart
         $ ./installer.sh
 
