@@ -1,9 +1,0 @@
-diff --git a/files/apts/general b/files/apts/general
-index be7bf98..7dd7a09 100644
---- a/files/apts/general
-+++ b/files/apts/general
-@@ -20,3 +20,4 @@ tcpdump
- euca2ools # only for testing client
- tar
- python-cmd2 # dist:precise
-+python-pyparsing

@@ -1,6 +1,7 @@
 disable_service n-net
 enable_service q-svc
 enable_service q-agt
+enable_service q-dhcp
 Q_PLUGIN="nec"
 SCHEDULER=nova.scheduler.simple.SimpleScheduler
 LIBVIRT_FIREWALL_DRIVER=nova.virt.firewall.NoopFirewallDriver
@@ -13,6 +14,7 @@ NOVA_USE_QUANTUM_API=v2
 #Q_HOST=${CC_HOST}
 #OFC_HOST=${Q_HOST}
 #OVS_INTERFACE=eth1
+OVS_INTERFACE=eth1
 #GRE_REMOTE_IPS=192.168.122.102:192.168.122.103
 
 _PASSWD=usapro
@@ -21,3 +23,6 @@ MYSQL_PASSWORD=$_PASSWD
 RABBIT_PASSWORD=$_PASSWD
 SERVICE_PASSWORD=$_PASSWD
 SERVICE_TOKEN=$_PASSWD
+
+QUANTUM_REPO=https://github.com/r-mibu/quantum.git
+QUANTUM_BRANCH=bp/quantum-nec-openflow-plugin
