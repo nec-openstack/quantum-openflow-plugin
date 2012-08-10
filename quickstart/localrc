@@ -1,3 +1,13 @@
+#CC_HOST=192.168.122.101
+#MYSQL_HOST=${CC_HOST}
+#SERVICE_HOST=${CC_HOST}
+#RABBIT_HOST=${CC_HOST}
+#Q_HOST=${CC_HOST}
+#OFC_HOST=${Q_HOST}
+
+#OVS_INTERFACE=eth1
+#GRE_REMOTE_IPS=192.168.122.102:192.168.122.103
+
 disable_service n-net
 enable_service q-svc
 enable_service q-agt
@@ -7,15 +17,8 @@ SCHEDULER=nova.scheduler.simple.SimpleScheduler
 LIBVIRT_FIREWALL_DRIVER=nova.virt.firewall.NoopFirewallDriver
 NOVA_USE_QUANTUM_API=v2
 
-#CC_HOST=192.168.122.101
-#MYSQL_HOST=${CC_HOST}
-#SERVICE_HOST=${CC_HOST}
-#RABBIT_HOST=${CC_HOST}
-#Q_HOST=${CC_HOST}
-#OFC_HOST=${Q_HOST}
-#OVS_INTERFACE=eth1
-OVS_INTERFACE=eth1
-#GRE_REMOTE_IPS=192.168.122.102:192.168.122.103
+QUANTUM_REPO=https://github.com/r-mibu/quantum.git
+QUANTUM_BRANCH=bp/quantum-nec-openflow-plugin
 
 _PASSWD=usapro
 ADMIN_PASSWORD=$_PASSWD
@@ -23,6 +26,3 @@ MYSQL_PASSWORD=$_PASSWD
 RABBIT_PASSWORD=$_PASSWD
 SERVICE_PASSWORD=$_PASSWD
 SERVICE_TOKEN=$_PASSWD
-
-QUANTUM_REPO=https://github.com/r-mibu/quantum.git
-QUANTUM_BRANCH=bp/quantum-nec-openflow-plugin
