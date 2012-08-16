@@ -14,7 +14,7 @@ if [ -n "$1" ]; then
 fi
 
 CDIR=$(cd $(dirname "$0") && pwd)
-NEC_PLUGIN_DIR=$(dirname $(dirname "$CDIR"))
+NEC_PLUGIN_DIR=$(dirname "$CDIR")
 DEVSTACK_REPO=http://github.com/openstack-dev/devstack.git
 DEVSTACK_DIR=devstack
 DEVSTACK_BRANCH=6bedba790250b9b67776645c690d29d58d94ceac
