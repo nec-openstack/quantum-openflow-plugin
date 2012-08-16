@@ -14,6 +14,7 @@ if [ -n "$1" ]; then
 fi
 
 CDIR=$(cd $(dirname "$0") && pwd)
+NEC_PLUGIN_DIR=$(dirname $(dirname "$CDIR"))
 DEVSTACK_REPO=http://github.com/openstack-dev/devstack.git
 DEVSTACK_DIR=devstack
 DEVSTACK_BRANCH=6bedba790250b9b67776645c690d29d58d94ceac
@@ -39,12 +40,11 @@ if [ ! -e $DEVSTACK_DIR ]; then
     git clone $DEVSTACK_REPO $DEVSTACK_DIR
     pushd $DEVSTACK_DIR
     git checkout $DEVSTACK_BRANCH
-    git am $CDIR/patches/devstack/0001-support-Quantum-NEC-OpenFlow-Plugin.patch
-    git am $CDIR/patches/devstack/0002-support-http_proxy.patch
-    git am $CDIR/patches/devstack/0003-Multi-node-support-with-Quantum.patch
+    patch -p1 < $CDIR/patches/devstack-support-nec-openflow-plugin.patch
     cp $LOCALRC ./localrc
     popd
 fi
 pushd $DEVSTACK_DIR
-./stack.sh
+./unstack.sh
+NEC_PLUGIN_DIR=$NEC_PLUGIN_DIR ./stack.sh
 popd

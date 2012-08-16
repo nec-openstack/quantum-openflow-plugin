@@ -21,6 +21,7 @@ class Client(QuantumClient):
         LOG.debug("Client issuing request: %s %s" % (method, action))
 
         body = self.serialize(body)
+        LOG.debug("Client request body: %s" % body)
         try:
             connection_type = self.get_connection_type()
             headers = headers or {"Content-Type":

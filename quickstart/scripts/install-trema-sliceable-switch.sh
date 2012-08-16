@@ -10,7 +10,8 @@ SLICE_DIR="$TREMA_DIR/apps/sliceable_switch"
 VAR_DIR="$TREMA_DIR/var"
 TREMA_REPO=https://github.com/trema/trema.git
 TREMA_APPS_REPO=https://github.com/trema/apps.git
-TREMA_BRANCH=develop
+#TREMA_BRANCH=develop
+TREMA_BRANCH=0.2.2
 #TREMA_APPS_BRANCH=master
 TREMA_APPS_BRANCH=1377c14cdf68888bae28d1065baa80cf7913b829
 

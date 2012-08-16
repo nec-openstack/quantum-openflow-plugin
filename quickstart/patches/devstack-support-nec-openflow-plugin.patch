@@ -1,0 +1,130 @@
+diff --git a/functions b/functions
+index 5114de1..52067ce 100644
+--- a/functions
++++ b/functions
+@@ -288,10 +288,16 @@ function pip_install {
+     else
+         CMD_PIP=/usr/bin/pip-python
+     fi
++    local _PIP_PROXY
++    if [ -n "$http_proxy" ]; then
++      _PIP_PROXY="--proxy=$http_proxy"
++    elif [ -n "$https_proxy" ]; then
++      _PIP_PROXY="--proxy=$https_proxy"
++    fi
+     sudo PIP_DOWNLOAD_CACHE=/var/cache/pip \
+         HTTP_PROXY=$http_proxy \
+         HTTPS_PROXY=$https_proxy \
+-        $CMD_PIP install --use-mirrors $@
++        $CMD_PIP install --use-mirrors $_PIP_PROXY $@
+ }
+ 
+ 
+diff --git a/stack.sh b/stack.sh
+index 8a93608..1bc3420 100755
+--- a/stack.sh
++++ b/stack.sh
+@@ -626,7 +626,7 @@ if is_service_enabled swift; then
+     # storage service
+     git_clone $SWIFT_REPO $SWIFT_DIR $SWIFT_BRANCH
+ fi
+-if is_service_enabled g-api n-api; then
++if is_service_enabled g-api n-api n-cpu; then
+     # image catalog service
+     git_clone $GLANCE_REPO $GLANCE_DIR $GLANCE_BRANCH
+ fi
+@@ -641,9 +641,13 @@ fi
+ if is_service_enabled quantum; then
+     git_clone $QUANTUM_CLIENT_REPO $QUANTUM_CLIENT_DIR $QUANTUM_CLIENT_BRANCH
+ fi
+-if is_service_enabled q-svc; then
++if is_service_enabled quantum; then
+     # quantum
+     git_clone $QUANTUM_REPO $QUANTUM_DIR $QUANTUM_BRANCH
++    if [[ "$Q_PLUGIN" = "nec" ]]; then
++        git_clone $NEC_PLUGIN_REPO $NEC_PLUGIN_DIR $NEC_PLUGIN_BRANCH
++        cp -r $NEC_PLUGIN_DIR/quantum/* $QUANTUM_DIR/
++    fi
+ fi
+ if is_service_enabled m-svc; then
+     # melange
+@@ -668,7 +672,7 @@ fi
+ if is_service_enabled swift; then
+     cd $SWIFT_DIR; sudo python setup.py develop
+ fi
+-if is_service_enabled g-api n-api; then
++if is_service_enabled g-api n-api n-cpu; then
+     cd $GLANCE_DIR; sudo python setup.py develop
+ fi
+ cd $NOVA_DIR; sudo python setup.py develop
+@@ -678,7 +682,7 @@ fi
+ if is_service_enabled quantum; then
+     cd $QUANTUM_CLIENT_DIR; sudo python setup.py develop
+ fi
+-if is_service_enabled q-svc; then
++if is_service_enabled quantum; then
+     cd $QUANTUM_DIR; sudo python setup.py develop
+ fi
+ if is_service_enabled m-svc; then
+@@ -939,6 +943,25 @@ if is_service_enabled q-svc; then
+         # Make sure we're using the openvswitch plugin
+         sudo sed -i -e "s/^provider =.*$/provider = quantum.plugins.openvswitch.ovs_quantum_plugin.OVSQuantumPlugin/g" $QUANTUM_PLUGIN_INI_FILE
+     fi
++    if [[ "$Q_PLUGIN" = "nec" ]]; then
++        # Create database for the plugin/agent
++        if is_service_enabled mysql; then
++            mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -e 'DROP DATABASE IF EXISTS quantum;'
++            mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -e 'CREATE DATABASE IF NOT EXISTS quantum CHARACTER SET utf8;'
++        else
++            echo "mysql must be enabled in order to use the $Q_PLUGIN Quantum plugin."
++            exit 1
++        fi
++        QUANTUM_PLUGIN_INI_FILE=$QUANTUM_CONF_DIR/plugins.ini
++        if [[ -e $QUANTUM_DIR/etc/plugins.ini ]]; then
++            sudo mv $QUANTUM_DIR/etc/plugins.ini $QUANTUM_PLUGIN_INI_FILE
++        fi
++        sudo sed -i -e "s/^provider =.*$/provider = quantum.plugins.nec.nec_plugin.NECPlugin/g" $QUANTUM_PLUGIN_INI_FILE
++        # Set up NEC Plugin
++        sudo sed -i -e "s/^user.*$/user = root/g" \
++                    -e "s/^pass.*$/pass = $MYSQL_PASSWORD/g" \
++                    $QUANTUM_DIR/etc/quantum/plugins/nec/nec.ini
++    fi
+     if [[ -e $QUANTUM_DIR/etc/quantum.conf ]]; then
+         sudo mv $QUANTUM_DIR/etc/quantum.conf $QUANTUM_CONF_DIR/quantum.conf
+     fi
+@@ -1699,7 +1722,7 @@ if is_service_enabled g-reg; then
+ 
+     ADMIN_USER=admin
+     ADMIN_TENANT=admin
+-    TOKEN=`curl -s -d  "{\"auth\":{\"passwordCredentials\": {\"username\": \"$ADMIN_USER\", \"password\": \"$ADMIN_PASSWORD\"}, \"tenantName\": \"$ADMIN_TENANT\"}}" -H "Content-type: application/json" http://$HOST_IP:5000/v2.0/tokens | python -c "import sys; import json; tok = json.loads(sys.stdin.read()); print tok['access']['token']['id'];"`
++    TOKEN=`http_proxy= curl -s -d  "{\"auth\":{\"passwordCredentials\": {\"username\": \"$ADMIN_USER\", \"password\": \"$ADMIN_PASSWORD\"}, \"tenantName\": \"$ADMIN_TENANT\"}}" -H "Content-type: application/json" http://$HOST_IP:5000/v2.0/tokens | python -c "import sys; import json; tok = json.loads(sys.stdin.read()); print tok['access']['token']['id'];"`
+ 
+     # Option to upload legacy ami-tty, which works with xenserver
+     if [[ -n "$UPLOAD_LEGACY_TTY" ]]; then
+diff --git a/stackrc b/stackrc
+index 1ca3061..99b5db9 100644
+--- a/stackrc
++++ b/stackrc
+@@ -35,11 +35,11 @@ HORIZON_BRANCH=stable/essex
+ 
+ # python client library to nova that horizon (and others) use
+ NOVACLIENT_REPO=https://github.com/openstack/python-novaclient.git
+-NOVACLIENT_BRANCH=master
++NOVACLIENT_BRANCH=2012.1
+ 
+ # python keystone client library to nova that horizon uses
+ KEYSTONECLIENT_REPO=https://github.com/openstack/python-keystoneclient
+-KEYSTONECLIENT_BRANCH=master
++KEYSTONECLIENT_BRANCH=2012.1
+ 
+ # quantum service
+ QUANTUM_REPO=https://github.com/openstack/quantum
+@@ -47,7 +47,7 @@ QUANTUM_BRANCH=stable/essex
+ 
+ # quantum client
+ QUANTUM_CLIENT_REPO=https://github.com/openstack/python-quantumclient
+-QUANTUM_CLIENT_BRANCH=master
++QUANTUM_CLIENT_BRANCH=2012.1
+ 
+ # Tempest test suite
+ TEMPEST_REPO=https://github.com/openstack/tempest.git
