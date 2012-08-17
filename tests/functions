@@ -4,7 +4,7 @@
 quantum_cli="/usr/local/bin/quantum"
 quantum_server=${quantum_server:-127.0.0.1:9696}
 vifinfos_path="http://$quantum_server/v1.1/extensions/nec/vifinfos"
-sliceable_db="/opt/stack/sliceable_switch/db"
+sliceable_db="/opt/stack/trema/var/db"
 
 
 

@@ -6,15 +6,19 @@
 import httplib
 import logging
 import socket
-from webob import exc
+from webob import exc as h_exc
 
-from quantum.client import Client as QuantumClient
-from quantum.common import exceptions
+from quantum import client as q_client
+
 
 LOG = logging.getLogger(__name__)
 
 
-class Client(QuantumClient):
+class ClientException(h_exc.HTTPInternalServerError):
+    pass
+
+
+class Client(q_client.Client):
 
     def do_request(self, method, action, body=None,
                    headers=None, params=None):
@@ -45,8 +49,9 @@ class Client(QuantumClient):
                 if data and len(data) > 1:
                     return self.deserialize(data, status_code)
             else:
-                self._handle_fault_response(status_code, data)
+                LOG.error("Server returned error: [%s] "
+                  "%s" % (status_code, data))
+                raise ClientException("Operation Failed.")
         except (socket.error, IOError), e:
-            exc = exceptions.ConnectionFailed(reason=str(e))
-            LOG.exception(exc.message)
-            raise exc
+            LOG.error("ConnetionFailed due to %s" % str(e))
+            raise ClientException("Connetion Failed.")

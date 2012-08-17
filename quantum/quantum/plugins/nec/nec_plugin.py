@@ -7,14 +7,19 @@ import logging
 from webob import exc as h_exc
 
 from quantum.api.api_common import OperationalStatus
-from quantum.common import exceptions as exc
+from quantum.common import exceptions as q_exc
 from quantum.db import api as db
 from quantum.plugins.nec.db import nec_db as ndb
 from quantum.plugins.nec.db import quantum_db_extension as dbe
 from quantum.plugins.nec.nec_plugin_config import NECConfig
+from quantum.plugins.nec.tools import client
 from quantum.quantum_plugin_base import QuantumPluginBase
 
 LOG = logging.getLogger(__name__)
+
+
+class NECPluginException(h_exc.HTTPInternalServerError):
+    pass
 
 
 class NECPlugin(QuantumPluginBase):
@@ -64,35 +69,35 @@ class NECPlugin(QuantumPluginBase):
         if not ofn_tenant:
             LOG.warning("_get_ofn_tenant_id(): ofn_tenant not found "
                         "(tenant_id = %s)" % tenant_id)
-            raise h_exc.HTTPInternalServerError(\
-              "NotFound ofn_tenant_id for tenant_id %s." % tenant_id)
+            raise NECPluginException("NotFound ofn_tenant_id for "
+                                 "tenant_id %s." % tenant_id)
         return ofn_tenant.ofn_tenant_id
 
     def _get_ofn_network_id(self, network_id):
         ofn_network = ndb.get_ofn_network(network_id)
         if not ofn_network:
-            LOG.warning("_get_ofn_network_id(): ofn_network not found "
-                        "(network_id = %s)" % network_id)
-            raise h_exc.HTTPInternalServerError(\
-              "NotFound ofn_network_id for network_id %s." % network_id)
+            LOG.error("_get_ofn_network_id(): ofn_network not found "
+                      "(network_id = %s)" % network_id)
+            raise NECPluginException("NotFound ofn_network_id for "
+                                 "network_id %s." % network_id)
         return ofn_network.ofn_network_id
 
     def _get_ofn_port_id(self, port_id):
         ofn_port = ndb.get_ofn_port(port_id)
         if not ofn_port:
-            LOG.warning("_get_ofn_port_id(): ofn_port not found "
-                        "(port_id = %s)" % port_id)
-            raise h_exc.HTTPInternalServerError(\
-              "NotFound ofn_port_id for port_id %s." % port_id)
+            LOG.error("_get_ofn_port_id(): ofn_port not found "
+                      "(port_id = %s)" % port_id)
+            raise NECPluginException("NotFound ofn_port_id for "
+                                 "port_id %s." % port_id)
         return ofn_port.ofn_port_id
 
     def _get_ofn_filter_id(self, filter_id):
         ofn_filter = ndb.get_ofn_filter(filter_id)
         if not ofn_filter:
-            LOG.warning("_get_ofn_filter_id(): ofn_filter not found "
-                        "(filter_id = %s)" % filter_id)
-            raise h_exc.HTTPInternalServerError(\
-              "NotFound ofn_filter_id for filter_id %s." % filter_id)
+            LOG.error("_get_ofn_filter_id(): ofn_filter not found "
+                      "(filter_id = %s)" % filter_id)
+            raise NECPluginException("NotFound ofn_filter_id for "
+                                 "filter_id %s." % filter_id)
         return ofn_filter.ofn_filter_id
 
     def _port_attachable(self, port):
@@ -193,11 +198,10 @@ class NECPlugin(QuantumPluginBase):
                                                         new_net.uuid,
                                                         net_name)
             ndb.add_ofn_network(ofn_network_id, new_net.uuid)
-        except Exception, e:
-            LOG.error("create_network() failed on OFC: %s." % str(e))
+        except client.ClientException as e:
+            LOG.error("create_network() failed on OFC")
             db.network_destroy(new_net.uuid)
-            raise h_exc.HTTPInternalServerError(\
-              "Failed to create network on OFC.")
+            raise e
 
         db.network_update(new_net.uuid, net_name,
                           op_status=OperationalStatus.UP)
@@ -215,7 +219,7 @@ class NECPlugin(QuantumPluginBase):
         if net:
             for port in db.port_list(network_id):
                 if port['interface_id']:
-                    raise exc.NetworkInUse(net_id=network_id)
+                    raise q_exc.NetworkInUse(net_id=network_id)
 
             ofn_tenant_id = self._get_ofn_tenant_id(tenant_id)
             ofn_network_id = self._get_ofn_network_id(network_id)
@@ -225,7 +229,7 @@ class NECPlugin(QuantumPluginBase):
             db.network_destroy(network_id)
             return net
         # Network not found
-        raise exc.NetworkNotFound(net_id=network_id)
+        raise q_exc.NetworkNotFound(net_id=network_id)
 
     def update_network(self, tenant_id, network_id, **kwargs):
         """
@@ -278,7 +282,7 @@ class NECPlugin(QuantumPluginBase):
         LOG.debug("create_port() called")
         db.validate_network_ownership(tenant_id, network_id)
         port = db.port_create(network_id, port_state)
-        # Put operational status UP
+        # Put operational status DOWN
         db.port_update(port.uuid, network_id,
                        op_status=OperationalStatus.DOWN)
         return {'port-id': port.uuid}
@@ -319,12 +323,13 @@ class NECPlugin(QuantumPluginBase):
         db.validate_port_ownership(tenant_id, network_id, port_id)
         port = db.port_get(port_id, network_id)
         if port['interface_id']:
-            raise exc.PortInUse(net_id=network_id, port_id=port_id,
-                                att_id=port['interface_id'])
+            raise q_exc.PortInUse(net_id=network_id, port_id=port_id,
+                                  att_id=port['interface_id'])
         try:
             port = db.port_destroy(port_id, network_id)
         except Exception, e:
-            raise Exception("Failed to delete port: %s" % str(e))
+            LOG.error("Failed to delete port: %s" % str(e))
+            raise NECPluginException("Failed to delete port.")
         return {'port-id': port.uuid}
 
     def plug_interface(self, tenant_id, network_id, port_id, interface_id):
@@ -338,9 +343,9 @@ class NECPlugin(QuantumPluginBase):
         # Validate attachment
         port = db.port_get(port_id, network_id)
         if port.interface_id:
-            raise exc.PortInUse(net_id=port.network_id,
-                                port_id=port.uuid,
-                                att_id=port.interface_id)
+            raise q_exc.PortInUse(net_id=port.network_id,
+                                  port_id=port.uuid,
+                                  att_id=port.interface_id)
         p = dbe.get_plugged_port(interface_id)
         if p:
             net = db.network_get(p.network_id)
@@ -348,10 +353,10 @@ class NECPlugin(QuantumPluginBase):
                 p_id = p.uuid
             else:
                 p_id = "Not Available"
-            raise exc.AlreadyAttached(net_id=network_id,
-                                      port_id=port_id,
-                                      att_id=interface_id,
-                                      att_port_id=p_id)
+            raise q_exc.AlreadyAttached(net_id=network_id,
+                                        port_id=port_id,
+                                        att_id=interface_id,
+                                        att_port_id=p_id)
 
         port = db.port_set_attachment(port_id, network_id, interface_id)
         if self._port_attachable(port):
@@ -367,8 +372,6 @@ class NECPlugin(QuantumPluginBase):
         port = db.port_get(port_id, network_id)
         if self._port_attachable(port):
             self._detach(tenant_id, network_id, port_id)
-        # TODO(salvatore-orlando):
-        # Should unplug on port without attachment raise an Error?
         db.port_unset_attachment(port_id, network_id)
 
     # for Quantum Extension APIs
@@ -445,8 +448,8 @@ class NECPlugin(QuantumPluginBase):
                 LOG.error("_enable_filter(): failed to get vifinfo of "
                           "port.uuid=%s port.interface_id=%s" %
                           (port.uuid, port.interface_id))
-                raise h_exc.HTTPInternalServerError(\
-                  "NotFound vifinfo of port %s." % port.uuid)
+                raise NECPluginException("NotFound vifinfo of "
+                                         "port %s." % port.uuid)
         else:
             vifinfo = None
 
