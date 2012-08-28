@@ -28,8 +28,8 @@ fi
 # build
 sliceable=$TREMA_DIR/apps/sliceable_switch/sliceable_switch
 if [ ! -e $sliceable ] || [[ "$RECLONE" == "yes" ]]; then
-    git clone https://github.com/trema/trema.git $TREMA_DIR/trema
-    git clone https://github.com/trema/apps.git $TREMA_DIR/apps
+    git clone $TREMA_REPO $TREMA_DIR/trema
+    git clone $TREMA_APPS_REPO $TREMA_DIR/apps
     pushd $TREMA_DIR/trema
         git checkout $TREMA_BRANCH
     popd

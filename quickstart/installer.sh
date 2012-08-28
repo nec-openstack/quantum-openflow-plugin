@@ -28,7 +28,7 @@ fi
 $CDIR/scripts/config-cgroup-device-acl.sh
 
 if [ "$MODE" = "cc" ]; then
-    SLICEABLE_PATCH="$CDIR/patches/trema/0001-fixed-create_filter-in-config.cgi.patch" \
+    SLICEABLE_PATCH="$CDIR/patches/trema-fixed-restapi-and-config.patch" \
 	$CDIR/scripts/install-trema-sliceable-switch.sh
 fi
 
