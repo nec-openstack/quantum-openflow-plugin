@@ -29,8 +29,7 @@ class PFCDriver(object):
     def create_tenant(self, tenant_id):
         body = {'id': tenant_id}
         res = self.client.post(tenants_path, body=body)
-        ofn_tenant_id = res['id']
-        return ofn_tenant_id
+        return tenant_id
 
     def delete_tenant(self, ofn_tenant_id):
         path = tenant_path % ofn_tenant_id
