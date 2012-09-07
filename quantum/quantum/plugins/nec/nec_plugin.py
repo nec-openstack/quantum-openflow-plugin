@@ -224,9 +224,9 @@ class NECPlugin(QuantumPluginBase):
             ofn_tenant_id = self._get_ofn_tenant_id(tenant_id)
             ofn_network_id = self._get_ofn_network_id(network_id)
             self.driver.delete_network(ofn_tenant_id, ofn_network_id)
-            self._delete_orphan_ofn_tenant(tenant_id)
 
             db.network_destroy(network_id)
+            self._delete_orphan_ofn_tenant(tenant_id)
             return net
         # Network not found
         raise q_exc.NetworkNotFound(net_id=network_id)
