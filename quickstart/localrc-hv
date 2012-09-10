@@ -15,10 +15,7 @@ enable_service q-dhcp
 Q_PLUGIN="nec"
 SCHEDULER=nova.scheduler.simple.SimpleScheduler
 LIBVIRT_FIREWALL_DRIVER=nova.virt.firewall.NoopFirewallDriver
-NOVA_USE_QUANTUM_API=v2
-
-QUANTUM_REPO=https://github.com/r-mibu/quantum.git
-QUANTUM_BRANCH=bp/quantum-nec-openflow-plugin
+Q_USE_NAMESPACE=False
 
 _PASSWD=usapro
 ADMIN_PASSWORD=$_PASSWD

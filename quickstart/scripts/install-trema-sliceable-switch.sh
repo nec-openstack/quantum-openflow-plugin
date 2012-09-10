@@ -15,6 +15,8 @@ TREMA_BRANCH=0.2.4
 #TREMA_APPS_BRANCH=master
 TREMA_APPS_BRANCH=1377c14cdf68888bae28d1065baa80cf7913b829
 
+TREMA_LOG_LEVEL=${TREMA_LOG_LEVEL:-debug}
+
 pkgs="gcc make ruby ruby-dev irb file libjson-perl libpcap-dev sqlite3 \
 libsqlite3-dev apache2-mpm-prefork libdbi-perl libdbd-sqlite3-perl \
 libglib2.0-0 git"
@@ -129,5 +131,5 @@ sudo /etc/init.d/apache2 reload
 # start trema
 pushd $TREMA_DIR/trema
     sudo ./trema killall
-    sudo TREMA_TMP=$TREMA_TMP_DIR ./trema run -d -c $VAR_DIR/sliceable.conf
+    sudo LOGGING_LEVEL=$TREMA_LOG_LEVEL TREMA_TMP=$TREMA_TMP_DIR ./trema run -d -c $VAR_DIR/sliceable.conf
 popd
