@@ -82,7 +82,7 @@ class VIFInfo(BASE, QuantumBase):
 
     interface_id = Column(String(255), primary_key=True)
     datapath_id = Column(String(255), nullable=False)
-    port_no = Column(Integer, nullable=False)
+    port_no = Column(Integer)
     vlan_id = Column(Integer)
     mac = Column(String(36))
 

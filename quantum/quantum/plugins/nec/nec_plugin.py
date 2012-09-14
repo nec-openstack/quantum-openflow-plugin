@@ -382,8 +382,9 @@ class NECPlugin(QuantumPluginBase):
         if not vifinfo:
             return None
         ofs_port = {}
-        if vifinfo.datapath_id and vifinfo.port_no:
+        if vifinfo.datapath_id:
             ofs_port['datapath_id'] = vifinfo.datapath_id
+        if vifinfo.port_no:
             ofs_port['port_no'] = str(vifinfo.port_no)
         if vifinfo.vlan_id != 65535:
             ofs_port['vlan_id'] = str(vifinfo.vlan_id)
