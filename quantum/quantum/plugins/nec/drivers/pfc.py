@@ -54,8 +54,9 @@ class PFCDriver(object):
     def create_port(self, ofn_tenant_id, ofn_network_id, port_id, vifinfo):
         path = ports_path % (ofn_tenant_id, ofn_network_id)
         body = {'datapath_id': vifinfo.datapath_id,
-                'port': str(vifinfo.port_no),
                 'vid': str(vifinfo.vlan_id)}
+        if vifinfo.port_no:
+            body['port'] = str(vifinfo.port_no)
         res = self.client.post(path, body=body)
         ofn_port_id = res['id']
         return ofn_port_id
