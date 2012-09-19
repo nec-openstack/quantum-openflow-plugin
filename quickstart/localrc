@@ -12,11 +12,12 @@ disable_service n-net
 enable_service q-svc
 enable_service q-agt
 enable_service q-dhcp
+enable_service q-l3
 
 Q_PLUGIN="nec"
 SCHEDULER=nova.scheduler.simple.SimpleScheduler
-LIBVIRT_FIREWALL_DRIVER=nova.virt.firewall.NoopFirewallDriver
-Q_USE_NAMESPACE=False
+#LIBVIRT_FIREWALL_DRIVER=nova.virt.firewall.NoopFirewallDriver
+#Q_USE_NAMESPACE=False
 
 _PASSWD=usapro
 ADMIN_PASSWORD=$_PASSWD

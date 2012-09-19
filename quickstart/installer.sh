@@ -14,7 +14,7 @@ if [ -n "$1" ]; then
 fi
 
 CDIR=$(cd $(dirname "$0") && pwd)
-DEVSTACK_REPO=https://github.com/r-mibu/devstack.git
+DEVSTACK_REPO=https://github.com/nec-openstack/devstack.git
 DEVSTACK_BRANCH=quantum-nec-plugin
 DEVSTACK_DIR=devstack
 
@@ -32,9 +32,8 @@ fi
 [ -f /usr/bin/git ] || sudo apt-get -y install git
 
 if [ ! -e $DEVSTACK_DIR ]; then
-    git clone $DEVSTACK_REPO $DEVSTACK_DIR
+    git clone -b $DEVSTACK_BRANCH $DEVSTACK_REPO $DEVSTACK_DIR
     pushd $DEVSTACK_DIR
-    git checkout $DEVSTACK_BRANCH
     cp $LOCALRC ./localrc
     popd
 fi

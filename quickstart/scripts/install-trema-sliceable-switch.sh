@@ -15,7 +15,7 @@ TREMA_BRANCH=0.2.4
 #TREMA_APPS_BRANCH=master
 TREMA_APPS_BRANCH=1377c14cdf68888bae28d1065baa80cf7913b829
 
-TREMA_LOG_LEVEL=${TREMA_LOG_LEVEL:-debug}
+TREMA_LOG_LEVEL=${TREMA_LOG_LEVEL:-info}
 
 pkgs="gcc make ruby ruby-dev irb file libjson-perl libpcap-dev sqlite3 \
 libsqlite3-dev apache2-mpm-prefork libdbi-perl libdbd-sqlite3-perl \
