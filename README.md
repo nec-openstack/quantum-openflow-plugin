@@ -2,6 +2,10 @@ Quantum NEC OpenFlow Plugin
 ===========================
 A Quantum Plugin for an OpenFlow enabled Network.
 
+The plugin in this repository can be used with **Essex** version of OpenStack Quantum.
+**Folsom** version of the plugin is available in the main Quantum distribution.
+You can get it from https://launchpad.net/quantum/+download or Ubuntu/Fedora packages.
+
 
 Introduction
 ------------
