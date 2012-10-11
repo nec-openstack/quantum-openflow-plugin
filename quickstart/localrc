@@ -13,10 +13,11 @@ enable_service q-svc
 enable_service q-agt
 enable_service q-dhcp
 enable_service q-l3
+# installer.sh installs and builds Trema Sliceable Switch.
+#enable_service trema
 
 Q_PLUGIN="nec"
 SCHEDULER=nova.scheduler.simple.SimpleScheduler
-#LIBVIRT_FIREWALL_DRIVER=nova.virt.firewall.NoopFirewallDriver
 #Q_USE_NAMESPACE=False
 
 _PASSWD=usapro
@@ -25,3 +26,17 @@ MYSQL_PASSWORD=$_PASSWD
 RABBIT_PASSWORD=$_PASSWD
 SERVICE_PASSWORD=$_PASSWD
 SERVICE_TOKEN=$_PASSWD
+
+DEST=/opt/stack
+_LOGDIR=$DEST/logs
+SCREEN_LOGDIR=$_LOGDIR
+LOGFILE=$_LOGDIR/devstack.log
+LOG_COLOR=False
+
+#OFFLINE=1
+#RECLONE=1
+
+#CFGDIR=$HOME/tool/config
+#source $CFGDIR/01-proxy
+#source $CFGDIR/02-repos
+#source $CFGDIR/10-local

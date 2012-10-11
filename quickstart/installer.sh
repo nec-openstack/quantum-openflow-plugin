@@ -14,8 +14,8 @@ if [ -n "$1" ]; then
 fi
 
 CDIR=$(cd $(dirname "$0") && pwd)
-DEVSTACK_REPO=https://github.com/nec-openstack/devstack.git
-DEVSTACK_BRANCH=quantum-nec-plugin
+DEVSTACK_REPO=https://github.com/nec-openstack/devstack-quantum-nec-openflow.git
+DEVSTACK_BRANCH=develop
 DEVSTACK_DIR=devstack
 
 if [ "$MODE" = "hv" ]; then
@@ -40,5 +40,3 @@ fi
 pushd $DEVSTACK_DIR
     ./stack.sh
 popd
-
-LOCALRC=$CDIR/localrc $CDIR/scripts/config-ovs-links.sh

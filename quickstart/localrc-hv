@@ -8,14 +8,10 @@ OFC_HOST=${Q_HOST}
 #OVS_INTERFACE=eth1
 GRE_REMOTE_IPS=$CC_HOST
 
-disable_service n-net
-enable_service q-svc
-enable_service q-agt
-enable_service q-dhcp
+ENABLED_SERVICES=n-cpu,rabbit,g-api,quantum,q-agt
 Q_PLUGIN="nec"
-SCHEDULER=nova.scheduler.simple.SimpleScheduler
-LIBVIRT_FIREWALL_DRIVER=nova.virt.firewall.NoopFirewallDriver
-Q_USE_NAMESPACE=False
+#LIBVIRT_FIREWALL_DRIVER=nova.virt.firewall.NoopFirewallDriver
+#Q_USE_NAMESPACE=False
 
 _PASSWD=usapro
 ADMIN_PASSWORD=$_PASSWD
@@ -23,3 +19,17 @@ MYSQL_PASSWORD=$_PASSWD
 RABBIT_PASSWORD=$_PASSWD
 SERVICE_PASSWORD=$_PASSWD
 SERVICE_TOKEN=$_PASSWD
+
+DEST=/opt/stack
+_LOGDIR=$DEST/logs
+SCREEN_LOGDIR=$_LOGDIR
+LOGFILE=$_LOGDIR/devstack.log
+LOG_COLOR=False
+
+#OFFLINE=1
+#RECLONE=1
+
+#CFGDIR=$HOME/tool/config
+#source $CFGDIR/01-proxy
+#source $CFGDIR/02-repos
+#source $CFGDIR/10-local
