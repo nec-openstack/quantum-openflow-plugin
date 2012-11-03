@@ -20,7 +20,11 @@ Cluster Controller Node
 
 ### Configurations
 
-Configure `quickstart/localrc'.  Set the following parameters:
+Deploy devstack for NEC OpenFlow plugin.
+
+        $ ./installer.sh -s
+
+Configure `devstack/localrc'.  Set the following parameters:
 
 * **HOST_IP**: (Option) IP Address of the target HOST
   (If HOST_IP is not specified, the installer use eth0's IP address.)
@@ -57,7 +61,11 @@ On a compute node, only nova-compute will be setup.
 
 ### Configurations
 
-Configure `quickstart/localrc-hv'. (Note that the name of the configuration
+Deploy devstack for NEC OpenFlow plugin.
+
+        $ ./installer.sh -s hv
+
+Configure `devstack/localrc-hv'. (Note that the name of the configuration
 file ends with `-hv'.) Set the following parameters:
 
 * **CC_HOST**: IP Address of the Cluster Controller.

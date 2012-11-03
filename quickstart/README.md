@@ -10,7 +10,7 @@ this Plugin in one machine.  This installer installs and configures all
 services that the Quantum NEC OpenFlow Plugin needs.
 You can get a trial environment by one command!
 
-Note: From the Essex version of this installer use [Devstack][devstack].
+Note: This installer calls [Devstack][devstack] inside.
 
 
 Restrictions
@@ -52,7 +52,11 @@ machines, see [README-multinode.md][quickstart-multi].
 
 ### Configurations
 
-Configure `quickstart/localrc'.  Set the following parameters:
+Deploy devstack for NEC OpenFlow plugin.
+
+        $ ./installer.sh -s
+
+Configure `devstack/localrc'.  Set the following parameters:
 
 * HOST_IP: (Option) IP Address of the target HOST
   (If HOST_IP is not specified, the installer use eth0's IP address.)
