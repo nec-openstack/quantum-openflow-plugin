@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 # Copyright 2012 NEC Corporation.
 # All Rights Reserved.
 #
