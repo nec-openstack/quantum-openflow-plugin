@@ -1,36 +1,15 @@
 Quick Start Installer
 =====================
 
+Previously our quick start installer really installed the OpenStack,
+but now this is a thin wrapper of
+[DevStack with NEC OpenFlow plugin support][devstack-nec-openflow].
 
-What is Quick Start Installer?
-------------------------------
+Tested platform
+---------------
 
-Quick Start Installer is a script to build an OpenStack environment with
-this Plugin in one machine.  This installer installs and configures all
-services that the Quantum NEC OpenFlow Plugin needs.
-You can get a trial environment by one command!
-
-Note: This installer calls [Devstack][devstack] inside.
-
-
-Restrictions
-------------
-
-* This installer DO NOT support OS installation.
-  Install and setup OS by yourself (setup network, sudo, etc.).
-* Supported distribution is Ubuntu 12.04.
-* Use MySQL Database.
-* Run this installer as a regular user with sudo privileges.
-
-
-Target Softwares
-----------------
-
-* Nova
-* Quantum with this plugin
-* Trema and Sliceable Switch
-* Open vSwitch (deb package)
-
+* Ubuntu 12.04 installed machine
+* MySQL Database
 
 Installation Modes
 ------------------
@@ -40,36 +19,33 @@ This installer supports following modes:
 * **All-In-One** : Run OpenStack+OpenFlow on a single machine. See below.
 * **Multi-Node** : Setup a multi-node cluster which consists of
   one cloud controller and several compute nodes.
-  See [README-multinode.md][quickstart-multi] for details.
 
 All-In-One (Single node)
 ------------------------
 
 The instruction below describes how to install OpenStack with NEC OpenFlow plugin
-for a single machine. If you would like to install OpenStack with multiple physical
-machines, see [README-multinode.md][quickstart-multi].
+for a single machine.
 
-
-### Configurations
+## Configurations
 
 Deploy devstack for NEC OpenFlow plugin.
 
         $ ./installer.sh -s
 
-Configure `devstack/localrc'.  Set the following parameters:
+Configure `devstack/localrc'.
+Please see [README][devstack-readme] of devstack with NEC OpenFlow pluign support
+for the configuration details.
 
-* HOST_IP: (Option) IP Address of the target HOST
-  (If HOST_IP is not specified, the installer use eth0's IP address.)
-* _PASSWD: Password for all components
+## Run Installer
 
-See [Devstack][devstack] for more information.
-
-
-### Run Installer
-
-Run `installer.sh', and wait...
+Run `installer.sh', and wait... It executes stack.sh inside.
 
         $ ./installer.sh
+
+or
+
+        $ cd devstack
+        $ ./stack.sh
 
 After installation has finished, check console output and log files.
 The log files can be found at:
@@ -78,18 +54,45 @@ The log files can be found at:
 * Trema:   /tmp/trema/log/
 
 
+Multi-Node setup
+----------------
+
+## Get devstack and prepare localrc (configuartion file)
+
+On the controller node
+
+  $ ./installer.sh -s cc
+
+On the compute nodes
+
+  $ ./installer.sh -s hv
+
+## Configurations
+
+Please see [README][devstack-readme] of devstack with NEC OpenFlow pluign support
+for the configuration details.
+
+## Start OpenStack and OpenFlow controller
+
+On the controller node
+
+  $ ./installer.sh cc
+
+On the compute nodes
+
+  $ ./installer.sh hv
+
 Test VM Launch
 --------------
 
 1. Load nova related environment variables.
 
-        $ source quickstart/devstack/openrc
+        $ source devstack/openrc
 
 2. Launch VM.
    e.g.:
 
-        $ image_id=$(nova image-list | awk'/ tty-quantum /{print $2}')
-        $ nova boot --image $image_id --flavor 1 servera
+        $ nova boot --image tty-quantum --flavor 1 server1
 
 3. Check Status
 
@@ -98,5 +101,5 @@ Test VM Launch
 4. Ping, SSH, etc...  Enjoy!
 
 [devstack]: http://devstack.org/
-[quickstart-single]: https://github.com/nec-openstack/quantum-openflow-plugin/blob/master/quickstart/README.md
-[quickstart-multi]: https://github.com/nec-openstack/quantum-openflow-plugin/blob/master/quickstart/README-multinode.md
+[devstack-nec-plugin]: https://github.com/nec-openstack/devstack-quantum-nec-openflow/tree/folsom
+[devstack-readme]: https://github.com/nec-openstack/devstack-quantum-nec-openflow/blob/folsom/README.md
