@@ -1,5 +1,5 @@
-Quantum NEC OpenFlow Plugin
-===========================
+Quantum NEC OpenFlow Plugin (Essex version)
+===========================================
 A Quantum Plugin for an OpenFlow enabled Network.
 
 The plugin in this repository can be used with **Essex** version of OpenStack Quantum.
