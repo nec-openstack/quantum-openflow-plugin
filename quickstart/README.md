@@ -2,8 +2,8 @@ Quick Start Installer
 =====================
 
 Previously our quick start installer really installed the OpenStack,
-but now this is a thin wrapper of
-[DevStack with NEC OpenFlow plugin support][devstack-nec-openflow].
+but **NOW this is a thin wrapper of [DevStack with NEC OpenFlow plugin support][devstack-nec-openflow]**.
+There are no difference if you use [devstack][devstack-nec-openflow] directly.
 
 Tested platform
 ---------------
@@ -101,5 +101,5 @@ Test VM Launch
 4. Ping, SSH, etc...  Enjoy!
 
 [devstack]: http://devstack.org/
-[devstack-nec-plugin]: https://github.com/nec-openstack/devstack-quantum-nec-openflow/tree/folsom
+[devstack-nec-openflow]: https://github.com/nec-openstack/devstack-quantum-nec-openflow/tree/folsom
 [devstack-readme]: https://github.com/nec-openstack/devstack-quantum-nec-openflow/blob/folsom/README.md
