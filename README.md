@@ -13,16 +13,19 @@ How to get
   * Customized version : https://github.com/nec-openstack/quantum
 
 ### Essex : **essex** branch
-  * Available at https://github.com/nec-openstack/quantum-openflow-plugin/tree/essex
-  * git clone -b essex https://github.com/nec-openstack/quantum-openflow-plugin.git
+Available at https://github.com/nec-openstack/quantum-openflow-plugin/tree/essex
+
+    git clone -b essex https://github.com/nec-openstack/quantum-openflow-plugin.git
 
 ### Diablo : **diablo** branch
-  * git clone -b diablo https://github.com/nec-openstack/quantum-openflow-plugin.git
+
+    git clone -b diablo https://github.com/nec-openstack/quantum-openflow-plugin.git
 
 ### Diablo with packet filtering feature : **diablo-filter** branch
-  * This version has an advanced feature of packet filtering in OpenFlow network.
-    It leverages the packet filter feature in Trema Sliceable Switch.
-  * git clone -b diablo-filter https://github.com/nec-openstack/quantum-openflow-plugin.git
+This version has an advanced feature of packet filtering in OpenFlow network.
+It leverages the packet filtering feature in Trema Sliceable Switch.
+
+    git clone -b diablo-filter https://github.com/nec-openstack/quantum-openflow-plugin.git
 
 Related Projects
 ----------------
