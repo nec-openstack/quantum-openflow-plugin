@@ -1,7 +1,6 @@
-Quantum NEC OpenFlow Plugin
-===========================
+Quantum NEC OpenFlow Plugin (Diablo version with packet filtering)
+==================================================================
 A Quantum Plugin for an OpenFlow enabled Network.
-
 
 Introduction
 ------------
