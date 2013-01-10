@@ -1,5 +1,5 @@
-Quantum NEC OpenFlow Plugin
-===========================
+Quantum NEC OpenFlow Plugin (Diablo version)
+============================================
 A Quantum Plugin for an OpenFlow enabled Network.
 
 
